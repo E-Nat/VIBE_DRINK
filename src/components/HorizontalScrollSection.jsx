@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useFlavor } from '../context/FlavorContext';
 import { soundEngine } from '../utils/audio';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import './HorizontalScrollSection.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -12,6 +12,7 @@ export const HorizontalScrollSection = () => {
   const { currentFlavorKey, setFlavor, addToCart } = useFlavor();
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
+  const [activeMobileIndex, setActiveMobileIndex] = useState(0);
 
   const panels = [
     {
@@ -61,6 +62,7 @@ export const HorizontalScrollSection = () => {
     },
   ];
 
+  // Desktop Pinned GSAP ScrollTrigger
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     if (isMobile) return;
@@ -80,7 +82,7 @@ export const HorizontalScrollSection = () => {
           pin: true,
           scrub: 1,
           start: 'top top',
-          end: () => `+=${totalScrollWidth + 400}`,
+          end: () => `+=${totalScrollWidth + 300}`,
           invalidateOnRefresh: true,
         },
       });
@@ -88,6 +90,27 @@ export const HorizontalScrollSection = () => {
 
     return () => ctx.revert();
   }, []);
+
+  const handleMobileScroll = (e) => {
+    const el = e.target;
+    const itemWidth = el.offsetWidth * 0.85;
+    const index = Math.round(el.scrollLeft / itemWidth);
+    if (index !== activeMobileIndex && index >= 0 && index < panels.length) {
+      setActiveMobileIndex(index);
+    }
+  };
+
+  const scrollToPanel = (idx) => {
+    if (trackRef.current) {
+      const itemWidth = trackRef.current.offsetWidth * 0.85;
+      trackRef.current.scrollTo({
+        left: idx * itemWidth,
+        behavior: 'smooth',
+      });
+      setActiveMobileIndex(idx);
+      soundEngine.playClick(700);
+    }
+  };
 
   return (
     <section
@@ -102,11 +125,15 @@ export const HorizontalScrollSection = () => {
         </div>
         <h2 className="horizontal-title font-editorial">FIND YOUR VIBE</h2>
         <span className="horizontal-indicator-hint font-nav">
-          SCROLL TO EXPLORE HORIZONTALLY →
+          SWIPE OR SCROLL TO EXPLORE →
         </span>
       </div>
 
-      <div ref={trackRef} className="horizontal-track">
+      <div
+        ref={trackRef}
+        className="horizontal-track"
+        onScroll={handleMobileScroll}
+      >
         {panels.map((panel, idx) => (
           <div
             key={panel.id}
@@ -154,6 +181,19 @@ export const HorizontalScrollSection = () => {
               </div>
             </div>
           </div>
+        ))}
+      </div>
+
+      {/* Mobile Touch Carousel Dots */}
+      <div className="mobile-carousel-dots" aria-hidden="true">
+        {panels.map((p, idx) => (
+          <button
+            key={p.id}
+            type="button"
+            className={`carousel-dot ${idx === activeMobileIndex ? 'active' : ''}`}
+            onClick={() => scrollToPanel(idx)}
+            aria-label={`Slide ${idx + 1}`}
+          />
         ))}
       </div>
     </section>

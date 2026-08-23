@@ -12,6 +12,9 @@ export const AmbientBackground = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
+    let isPageVisible = true;
+
+    const isTouch = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -20,83 +23,94 @@ export const AmbientBackground = () => {
     resize();
     window.addEventListener('resize', resize);
 
-    // Mouse tracking for parallax interaction
+    const handleVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+      if (isPageVisible) {
+        render();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Track mouse only on non-touch devices
     const handleMouseMove = (e) => {
       mouseRef.current.targetX = (e.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.targetY = (e.clientY / window.innerHeight) * 2 - 1;
     };
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    if (!isTouch) {
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    }
 
     // Abstract Dynamic Floating Meshes & Geometry
     const isMobile = window.innerWidth < 768;
-    const shapeCount = isMobile ? 4 : 8;
+    const shapeCount = isMobile ? 3 : 7;
     const abstractShapes = Array.from({ length: shapeCount }, (_, i) => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      radius: Math.random() * (isMobile ? 80 : 160) + 60,
-      points: Math.floor(Math.random() * 3) + 5, // 5 to 7 vertices for organic blob
-      angles: Array.from({ length: 7 }, () => Math.random() * 0.3 + 0.85),
-      rotSpeed: (Math.random() - 0.5) * 0.004,
+      radius: Math.random() * (isMobile ? 60 : 140) + 50,
+      points: 5,
+      angles: [0.9, 1.1, 0.95, 1.05, 0.92],
+      rotSpeed: (Math.random() - 0.5) * 0.003,
       rotation: Math.random() * Math.PI * 2,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.25,
+      vx: (Math.random() - 0.5) * (isMobile ? 0.15 : 0.25),
+      vy: (Math.random() - 0.5) * (isMobile ? 0.12 : 0.2),
       phase: Math.random() * Math.PI * 2,
-      phaseSpeed: Math.random() * 0.015 + 0.005,
-      layer: i % 3 + 1, // Depth layer 1, 2, 3
+      phaseSpeed: Math.random() * 0.012 + 0.004,
+      layer: (i % 3) + 1,
     }));
 
     // Ambient floating embers & luminous crystal dust
-    const particleCount = isMobile ? 35 : 70;
+    const particleCount = isMobile ? 22 : 60;
     const particles = Array.from({ length: particleCount }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      radius: Math.random() * 1.8 + 0.4,
-      speedY: Math.random() * 0.4 + 0.1,
-      speedX: (Math.random() - 0.5) * 0.25,
-      opacity: Math.random() * 0.6 + 0.15,
-      pulseSpeed: Math.random() * 0.02 + 0.006,
+      radius: Math.random() * 1.6 + 0.4,
+      speedY: Math.random() * 0.35 + 0.08,
+      speedX: (Math.random() - 0.5) * 0.2,
+      opacity: Math.random() * 0.55 + 0.15,
+      pulseSpeed: Math.random() * 0.018 + 0.005,
       pulseVal: Math.random() * Math.PI,
       depth: Math.random() * 0.8 + 0.2,
     }));
 
-    // Floating Prism Rings
-    const prismRings = [
-      { x: canvas.width * 0.2, y: canvas.height * 0.3, radius: 140, rot: 0, rotSpeed: 0.003, tilt: 0.4 },
-      { x: canvas.width * 0.85, y: canvas.height * 0.65, radius: 210, rot: 1, rotSpeed: -0.002, tilt: 0.6 },
-      { x: canvas.width * 0.5, y: canvas.height * 0.85, radius: 180, rot: 2, rotSpeed: 0.0025, tilt: 0.3 },
-    ];
+    // Floating Prism Rings (desktop only)
+    const prismRings = isMobile
+      ? []
+      : [
+          { x: canvas.width * 0.2, y: canvas.height * 0.3, radius: 140, rot: 0, rotSpeed: 0.0025, tilt: 0.4 },
+          { x: canvas.width * 0.85, y: canvas.height * 0.65, radius: 200, rot: 1, rotSpeed: -0.002, tilt: 0.6 },
+        ];
 
     const render = () => {
+      if (!isPageVisible) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Smooth mouse lerping
-      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
-      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
+      if (!isTouch) {
+        mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
+        mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
+      }
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
       const isLychee = currentFlavorKey === 'exoticLychee';
-      // Palette settings
       const mainColor = isLychee ? '232, 154, 170' : '215, 164, 91';
       const secondaryColor = isLychee ? '170, 70, 110' : '160, 90, 40';
       const highlightColor = isLychee ? '255, 210, 225' : '255, 230, 180';
 
-      // 1. Draw Abstract Morphing Liquid Meshes with Soft Glass Caustics
+      // 1. Draw Abstract Morphing Liquid Meshes
       abstractShapes.forEach((shape) => {
         shape.x += shape.vx;
         shape.y += shape.vy;
         shape.rotation += shape.rotSpeed;
         shape.phase += shape.phaseSpeed;
 
-        // Wrap screen
         if (shape.x < -shape.radius * 2) shape.x = canvas.width + shape.radius;
         if (shape.x > canvas.width + shape.radius * 2) shape.x = -shape.radius;
         if (shape.y < -shape.radius * 2) shape.y = canvas.height + shape.radius;
         if (shape.y > canvas.height + shape.radius * 2) shape.y = -shape.radius;
 
-        // Parallax offset based on layer
-        const px = shape.x + mx * (shape.layer * 22);
-        const py = shape.y + my * (shape.layer * 18);
+        const px = shape.x + mx * (shape.layer * 18);
+        const py = shape.y + my * (shape.layer * 14);
 
         ctx.save();
         ctx.translate(px, py);
@@ -106,8 +120,8 @@ export const AmbientBackground = () => {
         const numPoints = shape.points;
         for (let j = 0; j < numPoints; j++) {
           const angle = (j / numPoints) * Math.PI * 2;
-          const wobble = Math.sin(shape.phase + j * 1.5) * (shape.radius * 0.18);
-          const r = (shape.radius + wobble) * (shape.angles[j % shape.angles.length] || 1);
+          const wobble = Math.sin(shape.phase + j * 1.5) * (shape.radius * 0.16);
+          const r = (shape.radius + wobble) * shape.angles[j % shape.angles.length];
           const x = Math.cos(angle) * r;
           const y = Math.sin(angle) * r;
           if (j === 0) ctx.moveTo(x, y);
@@ -115,7 +129,6 @@ export const AmbientBackground = () => {
         }
         ctx.closePath();
 
-        // Subtle gradient aura fill
         const grad = ctx.createRadialGradient(0, 0, 10, 0, 0, shape.radius * 1.2);
         grad.addColorStop(0, `rgba(${mainColor}, 0.04)`);
         grad.addColorStop(0.5, `rgba(${secondaryColor}, 0.02)`);
@@ -124,19 +137,18 @@ export const AmbientBackground = () => {
         ctx.fillStyle = grad;
         ctx.fill();
 
-        // Luminous abstract contour line
-        ctx.strokeStyle = `rgba(${highlightColor}, 0.06)`;
+        ctx.strokeStyle = `rgba(${highlightColor}, 0.05)`;
         ctx.lineWidth = 1;
         ctx.stroke();
 
         ctx.restore();
       });
 
-      // 2. Draw 3D Floating Prism Glass Rings
+      // 2. Draw 3D Floating Prism Glass Rings (Desktop)
       prismRings.forEach((ring) => {
         ring.rot += ring.rotSpeed;
-        const rx = ring.x + mx * 35;
-        const ry = ring.y + my * 25;
+        const rx = ring.x + mx * 28;
+        const ry = ring.y + my * 20;
 
         ctx.save();
         ctx.translate(rx, ry);
@@ -145,18 +157,9 @@ export const AmbientBackground = () => {
 
         ctx.beginPath();
         ctx.arc(0, 0, ring.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${mainColor}, 0.09)`;
+        ctx.strokeStyle = `rgba(${mainColor}, 0.08)`;
         ctx.lineWidth = 1.5;
         ctx.stroke();
-
-        // Secondary concentric inner ring
-        ctx.beginPath();
-        ctx.arc(0, 0, ring.radius * 0.85, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${highlightColor}, 0.04)`;
-        ctx.lineWidth = 1;
-        ctx.setLineDash([8, 12]);
-        ctx.stroke();
-        ctx.setLineDash([]);
 
         ctx.restore();
       });
@@ -164,7 +167,7 @@ export const AmbientBackground = () => {
       // 3. Draw Floating Luminous Stardust & Embers
       particles.forEach((p) => {
         p.y -= p.speedY;
-        p.x += p.speedX + mx * p.depth * 0.2;
+        p.x += p.speedX + mx * p.depth * 0.15;
         p.pulseVal += p.pulseSpeed;
 
         if (p.y < -10) {
@@ -179,10 +182,7 @@ export const AmbientBackground = () => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius * p.depth, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${mainColor}, ${currentOpacity})`;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = `rgba(${mainColor}, 0.5)`;
         ctx.fill();
-        ctx.shadowBlur = 0;
       });
 
       animationFrameId = requestAnimationFrame(render);
@@ -193,7 +193,10 @@ export const AmbientBackground = () => {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (!isTouch) {
+        window.removeEventListener('mousemove', handleMouseMove);
+      }
     };
   }, [currentFlavorKey]);
 
@@ -205,26 +208,10 @@ export const AmbientBackground = () => {
       <div className={`ambient-glow-orb orb-tertiary ${currentFlavorKey}`} />
       <div className={`ambient-glow-orb orb-quaternary ${currentFlavorKey}`} />
 
-      {/* SVG Kinetic Fluid Shape Filters */}
-      <svg className="ambient-svg-defs" aria-hidden="true">
-        <defs>
-          <linearGradient id="vibeGoldFluid" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#D7A45B" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#8A4E1B" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#250B05" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="vibeRoseFluid" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#E89AAA" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#9C2755" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#240715" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-      </svg>
-
       {/* Canvas for dynamic abstract shapes & generative particles */}
       <canvas ref={canvasRef} className="ambient-particles-canvas" />
 
-      {/* Radial Vignette & Cinematic Shadow Overlay */}
+      {/* Radial Vignette */}
       <div className="ambient-vignette" />
     </div>
   );

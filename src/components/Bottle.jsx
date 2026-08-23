@@ -24,7 +24,6 @@ export const Bottle = ({
   const [displayImage, setDisplayImage] = useState(customImage || currentProduct.image);
   const [displayAlt, setDisplayAlt] = useState(customAlt || currentProduct.name);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragProgress, setDragProgress] = useState(0);
 
   // Physics state
   const dragRef = useRef({
@@ -55,15 +54,15 @@ export const Bottle = ({
     if (!bottle) return;
 
     const tl = gsap.timeline({
-      defaults: { ease: 'power2.inOut' },
+      defaults: { ease: 'power3.inOut' },
     });
 
     tl.to(bottle, {
       rotateY: 55,
-      rotateZ: -5,
+      rotateZ: -4,
       scale: 0.86,
       filter: 'blur(10px)',
-      opacity: 0.3,
+      opacity: 0.35,
       duration: 0.35,
     })
       .add(() => {
@@ -74,10 +73,10 @@ export const Bottle = ({
         bottle,
         {
           rotateY: -55,
-          rotateZ: 5,
+          rotateZ: 4,
           scale: 0.86,
           filter: 'blur(10px)',
-          opacity: 0.3,
+          opacity: 0.35,
         },
         {
           rotateY: 0,
@@ -94,7 +93,7 @@ export const Bottle = ({
       gsap.fromTo(
         glow,
         { scale: 0.75, opacity: 0.2 },
-        { scale: 1.25, opacity: 0.9, duration: 0.65, yoyo: true, repeat: 1 }
+        { scale: 1.25, opacity: 0.9, duration: 0.65, yoyo: true, repeat: 1, ease: 'power2.out' }
       );
     }
 
@@ -103,44 +102,60 @@ export const Bottle = ({
     };
   }, [currentFlavorKey, currentProduct, customImage]);
 
-  // Pointer drag & mousemove physics loop
+  // Pointer drag & mousemove physics loop with mobile touch gesture optimization
   useEffect(() => {
     if (!interactive) return;
 
+    const isTouch = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
     const container = containerRef.current;
     const bottle = bottleRef.current;
     if (!container || !bottle) return;
 
     let rafId;
+    let floatingTween = null;
+
+    // On mobile / touch devices: run gentle floating levitation
+    if (isTouch) {
+      floatingTween = gsap.to(bottle, {
+        y: -14,
+        duration: 3.2,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+    }
 
     const handlePointerDown = (e) => {
       dragRef.current.isPointerDown = true;
-      dragRef.current.startX = e.clientX;
+      dragRef.current.startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
       setIsDragging(true);
       soundEngine.playClick(900);
     };
 
     const handlePointerMove = (e) => {
-      if (dragRef.current.isPointerDown) {
-        const deltaX = e.clientX - dragRef.current.startX;
-        dragRef.current.targetRotY += deltaX * 0.45;
-        dragRef.current.startX = e.clientX;
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+      if (dragRef.current.isPointerDown && clientX !== undefined) {
+        const deltaX = clientX - dragRef.current.startX;
+        dragRef.current.targetRotY += deltaX * (isTouch ? 0.65 : 0.45);
+        dragRef.current.startX = clientX;
 
         // Subtle tactile click every few degrees
         const now = Date.now();
-        if (now - dragRef.current.lastClickSound > 120 && Math.abs(deltaX) > 2) {
-          soundEngine.playClick(600 + Math.abs(deltaX) * 15);
+        if (now - dragRef.current.lastClickSound > 140 && Math.abs(deltaX) > 2) {
+          soundEngine.playClick(600 + Math.abs(deltaX) * 12);
           dragRef.current.lastClickSound = now;
         }
-      } else {
+      } else if (!isTouch && clientX !== undefined && clientY !== undefined) {
         const rect = container.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        const x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        const y = ((clientY - rect.top) / rect.height) * 2 - 1;
 
-        mouseState.current.targetX = Math.max(-1, Math.min(1, x)) * 20;
-        mouseState.current.targetY = Math.max(-1, Math.min(1, y)) * 15;
+        mouseState.current.targetX = Math.max(-1, Math.min(1, x)) * 18;
+        mouseState.current.targetY = Math.max(-1, Math.min(1, y)) * 12;
         mouseState.current.targetRotateY = Math.max(-1, Math.min(1, x)) * 14;
-        mouseState.current.targetRotateX = -Math.max(-1, Math.min(1, y)) * 12;
+        mouseState.current.targetRotateX = -Math.max(-1, Math.min(1, y)) * 10;
       }
     };
 
@@ -150,7 +165,7 @@ export const Bottle = ({
     };
 
     const handleMouseLeave = () => {
-      if (!dragRef.current.isPointerDown) {
+      if (!dragRef.current.isPointerDown && !isTouch) {
         mouseState.current.targetX = 0;
         mouseState.current.targetY = 0;
         mouseState.current.targetRotateY = 0;
@@ -163,23 +178,31 @@ export const Bottle = ({
       const d = dragRef.current;
       const lerp = 0.08;
 
-      s.currentX += (s.targetX - s.currentX) * lerp;
-      s.currentY += (s.targetY - s.currentY) * lerp;
-      s.currentRotateY += (s.targetRotateY - s.currentRotateY) * lerp;
-      s.currentRotateX += (s.targetRotateX - s.currentRotateX) * lerp;
+      if (!isTouch) {
+        s.currentX += (s.targetX - s.currentX) * lerp;
+        s.currentY += (s.targetY - s.currentY) * lerp;
+        s.currentRotateY += (s.targetRotateY - s.currentRotateY) * lerp;
+        s.currentRotateX += (s.targetRotateX - s.currentRotateX) * lerp;
+      }
 
       // Inertial spin lerp
-      d.currentRotY += (d.targetRotY - d.currentRotY) * 0.1;
+      d.currentRotY += (d.targetRotY - d.currentRotY) * 0.12;
 
       const totalRotY = s.currentRotateY + d.currentRotY;
       const totalRotX = s.currentRotateX;
 
       if (bottle) {
-        bottle.style.transform = `
-          translate3d(${s.currentX}px, ${s.currentY}px, 0px)
-          rotateX(${totalRotX}deg)
-          rotateY(${totalRotY}deg)
-        `;
+        if (!isTouch) {
+          bottle.style.transform = `
+            translate3d(${s.currentX}px, ${s.currentY}px, 0px)
+            rotateX(${totalRotX}deg)
+            rotateY(${totalRotY}deg)
+          `;
+        } else {
+          bottle.style.transform = `
+            rotateY(${totalRotY}deg)
+          `;
+        }
       }
 
       if (lightSheenRef.current) {
@@ -187,7 +210,7 @@ export const Bottle = ({
         lightSheenRef.current.style.transform = `translateX(${sheenOffset}%)`;
       }
 
-      if (shadowRef.current) {
+      if (shadowRef.current && !isTouch) {
         shadowRef.current.style.transform = `
           translateX(${s.currentX * 0.7}px)
           scale(${1 + Math.abs(s.currentY) * 0.006})
@@ -197,17 +220,30 @@ export const Bottle = ({
       rafId = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    if (!isTouch) {
+      window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    }
     window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('touchend', handlePointerUp);
     container.addEventListener('pointerdown', handlePointerDown);
+    container.addEventListener('pointermove', handlePointerMove, { passive: true });
+    container.addEventListener('touchstart', handlePointerDown, { passive: true });
+    container.addEventListener('touchmove', handlePointerMove, { passive: true });
     container.addEventListener('mouseleave', handleMouseLeave);
     animate();
 
     return () => {
       cancelAnimationFrame(rafId);
-      window.removeEventListener('pointermove', handlePointerMove);
+      if (floatingTween) floatingTween.kill();
+      if (!isTouch) {
+        window.removeEventListener('mousemove', handlePointerMove);
+      }
       window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('touchend', handlePointerUp);
       container.removeEventListener('pointerdown', handlePointerDown);
+      container.removeEventListener('pointermove', handlePointerMove);
+      container.removeEventListener('touchstart', handlePointerDown);
+      container.removeEventListener('touchmove', handlePointerMove);
       container.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [interactive]);
