@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { SectionTitle } from '../components/SectionTitle';
 import { Button } from '../components/Button';
 import { Bottle } from '../components/Bottle';
+import { KineticMarquee } from '../components/KineticMarquee';
 import { useFlavor } from '../context/FlavorContext';
+import { soundEngine } from '../utils/audio';
 import { products } from '../data/products';
-import { Sparkles, GlassWater, Droplets, Wind, Layers, Check } from 'lucide-react';
+import { Sparkles, GlassWater, Droplets, Wind, Layers, Check, ArrowRight } from 'lucide-react';
 import './Flavours.css';
 
 export const Flavours = () => {
-  const { currentFlavorKey, setFlavor } = useFlavor();
+  const { currentFlavorKey, setFlavor, addToCart } = useFlavor();
   const [activeTab, setActiveTab] = useState(currentFlavorKey);
 
   const handleTabChange = (key) => {
     setActiveTab(key);
     setFlavor(key);
+    soundEngine.playClick(850);
   };
 
   const product = products[activeTab];
@@ -68,6 +71,13 @@ export const Flavours = () => {
           </div>
         </div>
       </section>
+
+      {/* Kinetic Marquee Interlude */}
+      <KineticMarquee
+        text1="SINGLE-ESTATE HARVEST • SLOW DISTILLATION • NOCTURNAL ESSENCE • "
+        text2="UNCOMPROMISING CHARACTER • PURE BOTANICAL DEPTH • 70CL LUXURY • "
+        tilt={-1}
+      />
 
       {/* 2. Active Flavor Showcase */}
       <section className="flavour-details-section section" key={activeTab}>
@@ -164,22 +174,22 @@ export const Flavours = () => {
             </div>
 
             <div className="flavour-actions">
+              <button
+                type="button"
+                className="flavour-reserve-direct-btn"
+                onClick={() => addToCart(activeTab)}
+                data-cursor-text="RESERVE"
+              >
+                <span>Reserve {product.flavor} ($145)</span>
+                <ArrowRight size={16} />
+              </button>
               <Button
                 to="/craft"
-                variant="primary"
+                variant="glass"
                 size="lg"
-                showArrow
                 cursorText="CRAFT"
               >
-                The Art of Character
-              </Button>
-              <Button
-                to="/contact"
-                variant="secondary"
-                size="lg"
-                cursorText="ALLOCATION"
-              >
-                Private Allocation
+                Distillation Alchemy
               </Button>
             </div>
           </div>
@@ -224,14 +234,16 @@ export const Flavours = () => {
                   <li><strong>ABV:</strong> {prod.abv}</li>
                 </ul>
 
-                <Button
-                  variant={prod.id === activeTab ? 'primary' : 'outline'}
-                  size="sm"
-                  onClick={() => handleTabChange(prod.id)}
-                  className="compare-select-btn"
+                <button
+                  type="button"
+                  className="compare-reserve-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(prod.id);
+                  }}
                 >
-                  {prod.id === activeTab ? 'Selected Expression' : 'Switch Expression'}
-                </Button>
+                  Reserve {prod.flavor} ($145)
+                </button>
               </div>
             ))}
           </div>

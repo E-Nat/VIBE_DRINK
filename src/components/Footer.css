@@ -181,11 +181,29 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .footer-submit-btn:hover {
   background: var(--color-accent-soft);
   transform: translateY(-1px);
+}
+
+.footer-subscribed-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: var(--color-accent-soft);
+  border: 1px solid rgba(215, 164, 91, 0.3);
+  background: rgba(215, 164, 91, 0.08);
+}
+
+.sub-icon {
+  color: var(--color-accent);
+  flex-shrink: 0;
 }
 
 /* Responsible drinking banner */
@@ -239,6 +257,7 @@
   text-transform: uppercase;
   color: var(--color-text-muted);
   transition: color var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer;
 }
 
 .footer-scroll-top:hover {

@@ -1,11 +1,15 @@
 import React from 'react';
 import { SectionTitle } from '../components/SectionTitle';
 import { Button } from '../components/Button';
+import { KineticMarquee } from '../components/KineticMarquee';
+import { useFlavor } from '../context/FlavorContext';
 import { craftData } from '../data/craft';
-import { Sparkles, Layers, ShieldCheck, Droplets, Gem } from 'lucide-react';
+import { Sparkles, Layers, ShieldCheck, Droplets, Gem, ArrowRight } from 'lucide-react';
 import './Craft.css';
 
 export const Craft = () => {
+  const { currentFlavorKey, addToCart } = useFlavor();
+
   return (
     <div className="craft-page-root">
       {/* 1. Craft Hero */}
@@ -39,6 +43,13 @@ export const Craft = () => {
           </div>
         </div>
       </section>
+
+      {/* Kinetic Streamer */}
+      <KineticMarquee
+        text1="SLOW COLD MACERATION • MICRO-BATCH POT STILLS • FRENCH OAK MATURATION • "
+        text2="UNCOMPROMISING EXTRACTION • NATURAL BOTANICAL ESSENCE • ARTISANAL MASTERY • "
+        tilt={1.2}
+      />
 
       {/* 2. Visual Macro Texture Spotlight */}
       <section className="craft-visual-section">
@@ -116,15 +127,25 @@ export const Craft = () => {
               </li>
             </ul>
 
-            <Button
-              to="/flavours"
-              variant="primary"
-              size="md"
-              showArrow
-              cursorText="DISCOVER"
-            >
-              Explore The Expressions
-            </Button>
+            <div className="craft-action-row">
+              <Button
+                to="/flavours"
+                variant="primary"
+                size="md"
+                showArrow
+                cursorText="DISCOVER"
+              >
+                Explore The Expressions
+              </Button>
+              <button
+                type="button"
+                className="craft-reserve-btn"
+                onClick={() => addToCart(currentFlavorKey)}
+              >
+                <span>Reserve Bottle ($145)</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
           </div>
 
           <div className="vessel-image-col">

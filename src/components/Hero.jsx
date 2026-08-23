@@ -1,34 +1,49 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useFlavor } from '../context/FlavorContext';
+import { soundEngine } from '../utils/audio';
 import { Bottle } from './Bottle';
 import { FlavorSelector } from './FlavorSelector';
 import { Button } from './Button';
-import { Sparkles, Compass, ShieldCheck } from 'lucide-react';
+import { Sparkles, Compass, ShieldCheck, ArrowRight, Volume2 } from 'lucide-react';
 import './Hero.css';
 
 export const Hero = () => {
-  const { currentProduct, currentFlavorKey } = useFlavor();
+  const {
+    currentProduct,
+    currentFlavorKey,
+    addToCart,
+    isAudioActive,
+    toggleAudio,
+  } = useFlavor();
+
   const heroRef = useRef(null);
   const titleRef = useRef(null);
   const descRef = useRef(null);
   const ctaRef = useRef(null);
   const metaRef = useRef(null);
+  const watermarkRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       tl.fromTo(
-        '.hero-badge',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, delay: 0.2 }
+        watermarkRef.current,
+        { opacity: 0, scale: 0.85 },
+        { opacity: 0.12, scale: 1, duration: 1.4, ease: 'power2.out' }
       )
+        .fromTo(
+          '.hero-badge',
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6 },
+          '-=1.0'
+        )
         .fromTo(
           titleRef.current,
           { opacity: 0, y: 30 },
           { opacity: 1, y: 0, duration: 0.8 },
-          '-=0.4'
+          '-=0.5'
         )
         .fromTo(
           descRef.current,
@@ -50,15 +65,15 @@ export const Hero = () => {
         )
         .fromTo(
           '.hero-bottle-column',
-          { opacity: 0, scale: 0.92, y: 40 },
-          { opacity: 1, scale: 1, y: 0, duration: 1, ease: 'power3.out' },
-          '-=0.8'
+          { opacity: 0, scale: 0.9, y: 50 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: 'power3.out' },
+          '-=0.9'
         )
         .fromTo(
           '.hero-selector-column',
           { opacity: 0, x: 30 },
           { opacity: 1, x: 0, duration: 0.8 },
-          '-=0.6'
+          '-=0.7'
         );
     }, heroRef);
 
@@ -66,7 +81,16 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section ref={heroRef} className="hero-section" aria-label="Hero Showcase">
+    <section ref={heroRef} className={`hero-section ${currentFlavorKey}`} aria-label="Hero Showcase">
+      {/* Massive Kinetic Typography Watermark */}
+      <div
+        ref={watermarkRef}
+        className="hero-kinetic-watermark font-editorial"
+        aria-hidden="true"
+      >
+        VIBE
+      </div>
+
       <div className="container hero-container">
         {/* Left Column: Editorial Brand Typography */}
         <div className="hero-content-column">
@@ -82,8 +106,8 @@ export const Hero = () => {
 
           <p ref={descRef} className="hero-description">
             A distinctive spirit with a bold personality. Discover the rich
-            character of <strong className="text-highlight">Black Tea</strong>{' '}
-            and the bright, expressive taste of{' '}
+            botanical depth of <strong className="text-highlight">Black Tea</strong>{' '}
+            and the luminous floral radiance of{' '}
             <strong className="text-highlight">Exotic Lychee</strong>.
           </p>
 
@@ -95,17 +119,17 @@ export const Hero = () => {
               showArrow
               cursorText="EXPLORE"
             >
-              Explore VIBE
+              Explore Portfolio
             </Button>
 
-            <Button
-              to="/story"
-              variant="secondary"
-              size="lg"
-              cursorText="STORY"
+            <button
+              type="button"
+              className="hero-reserve-pill-btn"
+              onClick={() => addToCart(currentFlavorKey)}
+              data-cursor-text="RESERVE"
             >
-              Our Story
-            </Button>
+              <span>Reserve Allocation ($145)</span>
+            </button>
           </div>
 
           {/* Quick Sensory Notes Bar */}
@@ -140,7 +164,7 @@ export const Hero = () => {
           <div className="hero-live-note glass-panel">
             <div className="live-note-header">
               <Sparkles size={14} className="live-note-icon" />
-              <span>Current Profile</span>
+              <span>Aromatic Signature</span>
             </div>
             <p className="live-note-aroma">"{currentProduct.profile.aroma}"</p>
           </div>
@@ -149,7 +173,7 @@ export const Hero = () => {
 
       {/* Hero Scroll Down Indicator */}
       <div className="hero-scroll-indicator" aria-hidden="true">
-        <span className="scroll-indicator-text">SCROLL TO DISCOVER</span>
+        <span className="scroll-indicator-text">SCROLL INTO THE EXPERIENCE</span>
         <div className="scroll-indicator-line">
           <div className="scroll-indicator-dot" />
         </div>

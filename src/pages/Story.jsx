@@ -3,13 +3,16 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SectionTitle } from '../components/SectionTitle';
 import { Button } from '../components/Button';
+import { KineticMarquee } from '../components/KineticMarquee';
+import { useFlavor } from '../context/FlavorContext';
 import { storyData } from '../data/story';
-import { Sparkles, Quote, Compass } from 'lucide-react';
+import { Sparkles, Quote, Compass, ArrowRight } from 'lucide-react';
 import './Story.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const Story = () => {
+  const { currentFlavorKey, addToCart } = useFlavor();
   const storyRef = useRef(null);
 
   useEffect(() => {
@@ -58,6 +61,13 @@ export const Story = () => {
           <div className="story-hero-scroll-line" />
         </div>
       </section>
+
+      {/* Kinetic Streamer */}
+      <KineticMarquee
+        text1="NOT JUST A DRINK • A NOCTURNAL FEELING • TIMELESS SOPHISTICATION • "
+        text2="CRAFTED FOR THOSE WHO COMMAND THE ROOM • BOLD IDENTITY • "
+        tilt={-1.5}
+      />
 
       {/* 2. Hero Visual Showcase */}
       <section className="story-visual-section">
@@ -161,6 +171,14 @@ export const Story = () => {
             >
               Explore The Flavours
             </Button>
+            <button
+              type="button"
+              className="story-reserve-btn"
+              onClick={() => addToCart(currentFlavorKey)}
+            >
+              <span>Reserve Allocation ($145)</span>
+              <ArrowRight size={15} />
+            </button>
           </div>
         </div>
       </section>

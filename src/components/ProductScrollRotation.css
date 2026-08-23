@@ -1,0 +1,140 @@
+.product-rotation-stage {
+  position: relative;
+  padding: 160px 0 140px;
+  overflow: hidden;
+  z-index: 3;
+  perspective: 1200px;
+}
+
+.rotation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.rotation-title {
+  font-size: clamp(36px, 5.5vw, 68px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
+  margin: 18px 0 12px;
+}
+
+.rotation-lead {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  max-width: 580px;
+  margin-bottom: 48px;
+}
+
+.rotation-bottle-stage {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 60px;
+  transform-style: preserve-3d;
+}
+
+.rotation-ambient-glow {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: var(--color-accent-glow);
+  filter: blur(80px);
+  z-index: 1;
+}
+
+.rotation-bottle-wrap {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.rotation-bottle-img {
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.85));
+}
+
+.rotation-light-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 65%
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.rotation-pillars-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+  max-width: 1080px;
+}
+
+.rotation-pillar-card {
+  padding: 32px 24px;
+  border-radius: 22px;
+  background: rgba(14, 9, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.rotation-pillar-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-accent);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--color-accent-glow);
+}
+
+.pillar-label-num {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-accent-soft);
+  font-family: var(--font-nav);
+  font-weight: 700;
+}
+
+.pillar-label-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  margin: 10px 0 8px;
+}
+
+.pillar-label-sub {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .product-rotation-stage {
+    padding: 100px 0;
+  }
+  .rotation-bottle-stage {
+    height: 340px;
+  }
+  .rotation-pillars-row {
+    grid-template-columns: 1fr;
+  }
+}

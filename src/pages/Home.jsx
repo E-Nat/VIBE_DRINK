@@ -1,208 +1,215 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Interactive Components
 import { Hero } from '../components/Hero';
-import { SectionTitle } from '../components/SectionTitle';
-import { Button } from '../components/Button';
-import { Bottle } from '../components/Bottle';
+import { KineticMarquee } from '../components/KineticMarquee';
+import { LiquidTransition } from '../components/LiquidTransition';
+import { StoryReveal } from '../components/StoryReveal';
+import { FlavorExperienceSection } from '../components/FlavorExperienceSection';
+import { BottleSplit } from '../components/BottleSplit';
+import { SensoryLab } from '../components/SensoryLab';
+import { FlavorOrbit } from '../components/FlavorOrbit';
+import { HorizontalScrollSection } from '../components/HorizontalScrollSection';
+import { BrandPhilosophy } from '../components/BrandPhilosophy';
+import { ProductScrollRotation } from '../components/ProductScrollRotation';
+import { AfterDarkSection } from '../components/AfterDarkSection';
+import { MonogramEngraver } from '../components/MonogramEngraver';
+import { SocialMoments } from '../components/SocialMoments';
 import { ReviewCard } from '../components/ReviewCard';
+import { Button } from '../components/Button';
+
+// Context & Data
 import { useFlavor } from '../context/FlavorContext';
-import { products, productList } from '../data/products';
 import { reviewsData } from '../data/reviews';
+import { soundEngine } from '../utils/audio';
 import { Sparkles, ArrowRight, ShieldCheck, GlassWater, Flame, Compass } from 'lucide-react';
 import './Home.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const Home = () => {
-  const { currentProduct, currentFlavorKey, setFlavor } = useFlavor();
-  const manifestoRef = useRef(null);
-  const manifestoLinesRef = useRef([]);
-  const dualSectionRef = useRef(null);
-  const servesRef = useRef(null);
+  const { currentProduct, currentFlavorKey, setFlavor, addToCart } = useFlavor();
+  const pageRef = useRef(null);
+  const brandStatementRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
+  const line3Ref = useRef(null);
+  const ritualImageRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // "THE VIBE" ScrollTrigger line-by-line reveal
-      if (manifestoRef.current) {
+      // 1. Brand Statement clipping mask reveal (Requirement 8)
+      if (brandStatementRef.current) {
+        const lines = [line1Ref.current, line2Ref.current, line3Ref.current];
         gsap.fromTo(
-          manifestoLinesRef.current,
-          { opacity: 0.15, y: 40, filter: 'blur(4px)' },
+          lines,
+          { yPercent: 120, opacity: 0, skewY: 6 },
           {
+            yPercent: 0,
             opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
+            skewY: 0,
             stagger: 0.2,
-            duration: 0.9,
+            duration: 1.1,
             ease: 'power3.out',
             scrollTrigger: {
-              trigger: manifestoRef.current,
+              trigger: brandStatementRef.current,
               start: 'top 75%',
               end: 'bottom 60%',
               scrub: 0.8,
             },
           }
         );
+
+        // Subtle horizontal movement on scroll scrub
+        gsap.to('.statement-line-2', {
+          x: -40,
+          scrollTrigger: {
+            trigger: brandStatementRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
       }
 
-      // Parallax and scroll fades for feature sections
-      gsap.fromTo(
-        '.dual-feature-card',
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          scrollTrigger: {
-            trigger: dualSectionRef.current,
-            start: 'top 80%',
-          },
-        }
-      );
-    });
+      // 2. Night ritual image 3D parallax
+      if (ritualImageRef.current) {
+        gsap.fromTo(
+          ritualImageRef.current,
+          { y: 50, scale: 0.96 },
+          {
+            y: -30,
+            scale: 1.04,
+            scrollTrigger: {
+              trigger: '.cinematic-ritual-stage',
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+      }
+    }, pageRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div className="home-page-root">
-      {/* 1. Hero Section */}
-      <Hero />
+    <div ref={pageRef} className={`home-page-root cinematic-flow-root ${currentFlavorKey}`}>
+      {/* 1. Act I: The Hero Genesis Stage (Requirements 4, 5, 6, 7) */}
+      <div id="hero">
+        <Hero />
+      </div>
 
-      {/* 2. THE VIBE - Cinematic Scroll Statement Section */}
-      <section ref={manifestoRef} className="manifesto-section section" aria-label="Brand Manifesto">
-        <div className="container manifesto-container">
-          <div className="manifesto-badge">
+      {/* 2. Kinetic Typography Streamer (Requirements 8, 9, 21) */}
+      <div className="streamer-interlude-1">
+        <KineticMarquee
+          text1="VIBE NOCTURNE • ARTISANAL BOTANICAL ALCHEMY • SINGLE BATCH CHARACTER • "
+          text2="THE MIDNIGHT STANDARD • DUAL CONTRASTING EXPRESSIONS • TIMELESS INDULGENCE • "
+          tilt={-1.5}
+        />
+      </div>
+
+      {/* 3. Act II: Brand Statement Section with Clipping Mask (Requirement 8) */}
+      <div id="manifesto" ref={brandStatementRef} className="brand-statement-section" aria-label="Brand Statement">
+        <div className="statement-ambient-glow" aria-hidden="true" />
+        <div className="container statement-container">
+          <div className="badge-pill">
             <span className="badge-dot" />
             <span>THE VIBE</span>
           </div>
 
-          <div className="manifesto-content">
-            <p
-              ref={(el) => (manifestoLinesRef.current[0] = el)}
-              className="manifesto-line font-editorial"
-            >
-              Not just a drink.
-            </p>
-            <p
-              ref={(el) => (manifestoLinesRef.current[1] = el)}
-              className="manifesto-line manifesto-line-accent font-display"
-            >
-              A feeling.
-            </p>
-            <p
-              ref={(el) => (manifestoLinesRef.current[2] = el)}
-              className="manifesto-subline font-body"
-            >
-              Conceived for those who seek character over conformity. Every drop is crafted to command the room, evoke deep conversation, and elevate the nocturnal hours.
-            </p>
+          <div className="statement-mask-wrapper">
+            <div className="mask-line">
+              <h2 ref={line1Ref} className="statement-heading font-editorial">
+                NOT JUST
+              </h2>
+            </div>
+            <div className="mask-line">
+              <h2 ref={line2Ref} className="statement-heading statement-line-2 font-display">
+                A DRINK.
+              </h2>
+            </div>
+            <div className="mask-line">
+              <h2 ref={line3Ref} className="statement-heading statement-line-3 font-editorial">
+                A FEELING.
+              </h2>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* 3. Dual Expressions - Side-by-Side Showcase */}
-      <section ref={dualSectionRef} className="dual-showcase-section section" aria-label="Flavor Expressions">
+          <p className="statement-subtext font-body">
+            Conceived for those who seek character over conformity. Every drop is crafted to command the room, evoke deep conversation, and elevate the nocturnal hours into an art form.
+          </p>
+        </div>
+      </div>
+
+      {/* 4. Liquid Transition (Requirement 15) */}
+      <LiquidTransition />
+
+      {/* 5. Act III: Story Reveal (Requirement 10: "Born to stand apart.") */}
+      <div id="story">
+        <StoryReveal />
+      </div>
+
+      {/* 6. Act IV: Immersive Flavour Experience (Requirements 11, 12: "CHOOSE YOUR VIBE") */}
+      <div id="dual">
+        <FlavorExperienceSection />
+      </div>
+
+      {/* 7. Act V: Interactive Bottle Split Section (Requirement 17) */}
+      <div className="cinematic-split-section">
         <div className="container">
-          <SectionTitle
-            badge="The Collection"
-            title="DUAL EXPRESSIONS"
-            subtitle="Two contrasting personalities, each engineered to transform the moment."
-            align="center"
-          />
-
-          <div className="dual-cards-grid">
-            {/* Black Tea Expression Card */}
-            <div
-              className={`dual-feature-card glass-panel-interactive ${currentFlavorKey === 'blackTea' ? 'active-flavor' : ''}`}
-              onClick={() => setFlavor('blackTea')}
-              data-cursor-text="BLACK TEA"
-            >
-              <div className="dual-card-top">
-                <span className="dual-expression-badge bt">01 • BOLD & RICH</span>
-                <h3 className="dual-card-title">VIBE Black Tea</h3>
-                <p className="dual-card-tagline">Slow-extracted botanicals, roasted malt & warm oak.</p>
-              </div>
-
-              <div className="dual-card-bottle-stage">
-                <img
-                  src="/vibe-black-tea.png"
-                  alt="VIBE Black Tea"
-                  className="dual-bottle-img"
-                  loading="lazy"
-                />
-                <div className="dual-bottle-glow bt-glow" />
-              </div>
-
-              <div className="dual-card-notes">
-                <div className="dual-note-pill">Smoked Honey</div>
-                <div className="dual-note-pill">Ceylon Tea</div>
-                <div className="dual-note-pill">Charred Oak</div>
-              </div>
-
-              <Button
-                to="/flavours"
-                variant="glass"
-                size="sm"
-                showArrow
-                cursorText="VIEW"
-                className="dual-card-btn"
-              >
-                Discover Black Tea
-              </Button>
-            </div>
-
-            {/* Exotic Lychee Expression Card */}
-            <div
-              className={`dual-feature-card glass-panel-interactive ${currentFlavorKey === 'exoticLychee' ? 'active-flavor' : ''}`}
-              onClick={() => setFlavor('exoticLychee')}
-              data-cursor-text="LYCHEE"
-            >
-              <div className="dual-card-top">
-                <span className="dual-expression-badge el">02 • BRIGHT & FLORAL</span>
-                <h3 className="dual-card-title">VIBE Exotic Lychee</h3>
-                <p className="dual-card-tagline">Luminous lychee nectar, damask rose & citrus mist.</p>
-              </div>
-
-              <div className="dual-card-bottle-stage">
-                <img
-                  src="/vibe-exotic-lychee.png"
-                  alt="VIBE Exotic Lychee"
-                  className="dual-bottle-img"
-                  loading="lazy"
-                />
-                <div className="dual-bottle-glow el-glow" />
-              </div>
-
-              <div className="dual-card-notes">
-                <div className="dual-note-pill">Lychee Nectar</div>
-                <div className="dual-note-pill">Burgundy Rose</div>
-                <div className="dual-note-pill">Citrus Blossom</div>
-              </div>
-
-              <Button
-                to="/flavours"
-                variant="glass"
-                size="sm"
-                showArrow
-                cursorText="VIEW"
-                className="dual-card-btn"
-              >
-                Discover Exotic Lychee
-              </Button>
-            </div>
-          </div>
+          <BottleSplit onSelectFlavor={(key) => setFlavor(key)} />
         </div>
-      </section>
+      </div>
 
-      {/* 4. The Night Ritual - Editorial Split Section */}
-      <section className="night-ritual-section section" aria-label="Night Experience">
+      {/* 8. Liquid Transition */}
+      <LiquidTransition flip />
+
+      {/* 9. Act VI: Molecular Sensory Matrix & Flavor Orbit (Requirements 14, 24) */}
+      <div className="cinematic-sensory-stage">
+        <div className="container">
+          <SensoryLab />
+        </div>
+      </div>
+
+      {/* 10. Flavor Orbit Visualization (Requirement 14) */}
+      <div className="cinematic-orbit-stage">
+        <div className="container">
+          <div className="orbit-section-header">
+            <div className="badge-pill">
+              <span className="badge-dot" />
+              <span>ORBITAL SENSORY HARMONY</span>
+            </div>
+            <h2 className="orbit-section-title font-editorial">ASTRAL DIMENSIONS</h2>
+            <p className="orbit-section-lead">Hover around the nodes to inspect aroma, character, finish, and serve ritual.</p>
+          </div>
+          <FlavorOrbit />
+        </div>
+      </div>
+
+      {/* 11. Act VII: Horizontal Scroll Section (Requirement 16: "FIND YOUR VIBE") */}
+      <HorizontalScrollSection />
+
+      {/* 12. Act VIII: Brand Philosophy (Requirement 18: "WHAT IS VIBE?") */}
+      <BrandPhilosophy />
+
+      {/* 13. Act IX: Product Scroll Rotation & Craft (Requirements 13, 25: "CRAFTED WITH CHARACTER") */}
+      <div id="craft">
+        <ProductScrollRotation />
+      </div>
+
+      {/* 14. Act X: The Nocturnal Ritual Spatial Horizon */}
+      <div className="cinematic-ritual-stage" aria-label="Night Experience">
         <div className="container ritual-grid">
           <div className="ritual-image-column">
             <div className="ritual-image-frame glass-panel">
               <img
+                ref={ritualImageRef}
                 src="/vibe-night-lifestyle.jpg"
-                alt="VIBE night ambiance"
+                alt="VIBE Night Experience"
                 className="ritual-main-img"
                 loading="lazy"
               />
@@ -216,61 +223,92 @@ export const Home = () => {
           <div className="ritual-text-column">
             <div className="badge-pill">
               <span className="badge-dot" />
-              <span>THE EXPERIENCE</span>
+              <span>THE RITUAL</span>
             </div>
 
-            <h2 className="ritual-heading">
+            <h2 className="ritual-heading font-editorial">
               CRAFTED FOR NIGHTS WORTH REMEMBERING
             </h2>
 
             <p className="ritual-desc">
-              VIBE is not designed for background noise. It is designed to be the centerpiece of private gatherings, late-night conversations, and celebratory toasts where taste and style coalesce.
+              VIBE is not designed for background noise. It is designed to be the centerpiece of private gatherings, late-night conversations, and celebratory toasts where taste, aroma, and style coalesce.
             </p>
 
             <div className="ritual-features-list">
-              <div className="ritual-feat-item">
-                <GlassWater className="feat-icon" size={20} />
+              <div className="ritual-feat-item glass-panel">
+                <GlassWater className="feat-icon" size={22} />
                 <div>
                   <h4 className="feat-title">Signature Crystal Pour</h4>
-                  <p className="feat-desc">Designed to open up aromas when poured over heavy sculpted ice.</p>
+                  <p className="feat-desc">Designed to open up aromas when poured over heavy hand-carved ice spheres.</p>
                 </div>
               </div>
 
-              <div className="ritual-feat-item">
-                <Flame className="feat-icon" size={20} />
+              <div className="ritual-feat-item glass-panel">
+                <Flame className="feat-icon" size={22} />
                 <div>
                   <h4 className="feat-title">Aromatic Warmth</h4>
-                  <p className="feat-desc">Natural botanical essences that evolve as the drink breathes in glass.</p>
+                  <p className="feat-desc">Natural cold-extracted essences that evolve gracefully as the drink breathes in glass.</p>
                 </div>
               </div>
             </div>
 
-            <Button
-              to="/story"
-              variant="primary"
-              size="md"
-              showArrow
-              cursorText="READ"
-            >
-              Explore Our Philosophy
-            </Button>
+            <div className="ritual-action-row">
+              <Button
+                to="/story"
+                variant="primary"
+                size="md"
+                showArrow
+                cursorText="STORY"
+              >
+                Our Philosophy
+              </Button>
+              <Button
+                to="/craft"
+                variant="glass"
+                size="md"
+                cursorText="CRAFT"
+              >
+                The Distillation Craft
+              </Button>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 5. Tastemaker Impressions Preview */}
-      <section className="home-reviews-section section" aria-label="Impressions">
+      {/* 15. Act XI: After Dark Experience (Requirement 26: "AFTER DARK") */}
+      <div id="dark">
+        <AfterDarkSection />
+      </div>
+
+      {/* 16. Act XII: Bespoke Monogram Engraving & Allocation Atelier */}
+      <div className="cinematic-atelier-stage">
         <div className="container">
-          <SectionTitle
-            badge="Voices"
-            title="IMPRESSIONS"
-            subtitle="Thoughts from our private tastings and evening tastemakers."
-            align="center"
-          />
+          <MonogramEngraver />
+        </div>
+      </div>
+
+      {/* 17. Act XIII: Social Moments Gallery (Requirement 27: "SHARE THE VIBE") */}
+      <SocialMoments />
+
+      {/* 18. Act XIV: Tastemaker Voices (Requirement 28) */}
+      <div id="reviews" className="cinematic-voices-stage" aria-label="Tastemaker Impressions">
+        <div className="container">
+          <div className="voices-header">
+            <div className="badge-pill">
+              <span className="badge-dot" />
+              <span>TESTIMONIALS</span>
+            </div>
+            <h2 className="voices-title font-editorial">TASTEMAKER IMPRESSIONS</h2>
+            <p className="voices-subtitle">
+              Notes from our private nocturnal tastings and evening connoisseurs.
+            </p>
+          </div>
 
           <div className="home-reviews-grid">
             {reviewsData.reviews.slice(0, 3).map((rev) => (
-              <ReviewCard key={rev.id} review={rev} />
+              <div key={rev.id} className="voice-card-wrapper">
+                <ReviewCard review={rev} />
+              </div>
             ))}
           </div>
 
@@ -286,40 +324,40 @@ export const Home = () => {
             </Button>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 6. High-End Final Call to Action */}
-      <section className="home-cta-banner section" aria-label="Explore Invitation">
+      {/* 19. Act XV: Final Spatial Invitation (Requirements 29, 30) */}
+      <div id="contact" className="cinematic-final-stage" aria-label="Step Into VIBE">
         <div className="container">
           <div className="home-cta-card glass-panel">
             <div className="cta-ambient-glow" />
             <span className="cta-badge">DISTINCTIVELY VIBE</span>
-            <h2 className="cta-title">STEP INTO THE VIBE</h2>
+            <h2 className="cta-title font-editorial">FIND YOUR VIBE</h2>
             <p className="cta-desc">
-              Experience the dual character of Black Tea and Exotic Lychee.
+              Experience the dual character of Black Tea and Exotic Lychee in our limited single-batch allocation.
             </p>
             <div className="cta-btn-group">
+              <button
+                type="button"
+                className="cta-primary-pill-btn"
+                onClick={() => addToCart(currentFlavorKey)}
+                data-cursor-text="RESERVE"
+              >
+                <span>Reserve Bottle ($145)</span>
+                <ArrowRight size={16} />
+              </button>
               <Button
                 to="/flavours"
-                variant="primary"
-                size="lg"
-                showArrow
-                cursorText="DISCOVER"
-              >
-                Discover Flavours
-              </Button>
-              <Button
-                to="/contact"
                 variant="glass"
                 size="lg"
-                cursorText="CONNECT"
+                cursorText="PORTFOLIO"
               >
-                Contact Concierge
+                Explore Full Portfolio
               </Button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

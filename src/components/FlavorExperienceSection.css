@@ -1,0 +1,210 @@
+.flavor-experience-stage {
+  position: relative;
+  padding: 160px 0 140px;
+  overflow: hidden;
+  z-index: 3;
+  transition: background-color 0.8s ease;
+}
+
+.fe-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  opacity: 0.55;
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fe-ambient-glow.blackTea {
+  background: radial-gradient(circle, rgba(215, 164, 91, 0.35) 0%, rgba(58, 22, 9, 0.4) 50%, transparent 75%);
+}
+
+.fe-ambient-glow.exoticLychee {
+  background: radial-gradient(circle, rgba(232, 154, 170, 0.35) 0%, rgba(56, 18, 37, 0.45) 50%, transparent 75%);
+}
+
+.fe-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.fe-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.fe-title {
+  font-size: clamp(38px, 6vw, 76px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
+  margin: 18px 0 12px;
+}
+
+.fe-lead {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  max-width: 560px;
+}
+
+.fe-dual-stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  width: 100%;
+  max-width: 1120px;
+}
+
+.fe-pod {
+  position: relative;
+  padding: 48px 36px;
+  border-radius: 28px;
+  background: rgba(14, 9, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.fe-pod:hover {
+  transform: translateY(-12px);
+  border-color: var(--color-accent);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 35px var(--color-accent-glow);
+}
+
+.fe-pod.enlarged {
+  transform: scale(1.04) translateY(-12px);
+}
+
+.fe-pod.dimmed {
+  opacity: 0.35;
+  filter: grayscale(40%) blur(1px);
+  transform: scale(0.96);
+}
+
+.pod-halo {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.4;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.bt-halo {
+  background: radial-gradient(circle, #D7A45B 0%, transparent 70%);
+}
+
+.el-halo {
+  background: radial-gradient(circle, #E89AAA 0%, transparent 70%);
+}
+
+.fe-pod:hover .pod-halo {
+  opacity: 0.8;
+  transform: scale(1.2);
+}
+
+.pod-bottle-wrap {
+  position: relative;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  margin-bottom: 24px;
+}
+
+.pod-bottle-img {
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.85));
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fe-pod:hover .pod-bottle-img {
+  transform: scale(1.08) rotate(2deg);
+}
+
+.pod-info-stack {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.4s ease;
+}
+
+.fe-pod:hover .pod-info-stack {
+  transform: translateY(-4px);
+}
+
+.pod-flavor-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.04em;
+}
+
+.pod-notes-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-nav);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-accent-soft);
+}
+
+.note-dot {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.pod-action-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  transition: all 0.3s ease;
+}
+
+.fe-pod:hover .pod-action-pill {
+  background: var(--color-accent);
+  color: #050306;
+  border-color: var(--color-accent);
+}
+
+@media (max-width: 900px) {
+  .fe-dual-stage {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .pod-bottle-wrap {
+    height: 280px;
+  }
+}

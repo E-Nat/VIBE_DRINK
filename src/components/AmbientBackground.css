@@ -10,10 +10,17 @@
   transition: background-color var(--transition-cinematic);
 }
 
+.ambient-svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
 .ambient-glow-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(110px);
   opacity: 0.65;
   transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, background;
@@ -21,8 +28,8 @@
 
 /* Primary Orb (Center / Bottle Halo) */
 .orb-primary {
-  width: 650px;
-  height: 650px;
+  width: 700px;
+  height: 700px;
   top: 25%;
   left: 50%;
   transform: translate(-50%, -30%);
@@ -32,8 +39,8 @@
 .orb-primary.blackTea {
   background: radial-gradient(
     circle,
-    rgba(215, 164, 91, 0.28) 0%,
-    rgba(58, 22, 9, 0.35) 45%,
+    rgba(215, 164, 91, 0.32) 0%,
+    rgba(58, 22, 9, 0.4) 45%,
     rgba(5, 3, 6, 0) 75%
   );
 }
@@ -41,26 +48,26 @@
 .orb-primary.exoticLychee {
   background: radial-gradient(
     circle,
-    rgba(232, 154, 170, 0.28) 0%,
-    rgba(56, 18, 37, 0.4) 45%,
+    rgba(232, 154, 170, 0.32) 0%,
+    rgba(56, 18, 37, 0.45) 45%,
     rgba(5, 3, 6, 0) 75%
   );
 }
 
 /* Secondary Orb (Top Right Atmosphere) */
 .orb-secondary {
-  width: 500px;
-  height: 500px;
+  width: 550px;
+  height: 550px;
   top: -100px;
-  right: -50px;
+  right: -60px;
   animation: ambientPulseAlt 14s ease-in-out infinite;
 }
 
 .orb-secondary.blackTea {
   background: radial-gradient(
     circle,
-    rgba(215, 164, 91, 0.18) 0%,
-    rgba(22, 10, 11, 0.3) 50%,
+    rgba(215, 164, 91, 0.22) 0%,
+    rgba(22, 10, 11, 0.35) 50%,
     rgba(5, 3, 6, 0) 75%
   );
 }
@@ -68,26 +75,26 @@
 .orb-secondary.exoticLychee {
   background: radial-gradient(
     circle,
-    rgba(232, 154, 170, 0.2) 0%,
-    rgba(39, 13, 30, 0.35) 50%,
+    rgba(232, 154, 170, 0.24) 0%,
+    rgba(39, 13, 30, 0.4) 50%,
     rgba(5, 3, 6, 0) 75%
   );
 }
 
 /* Tertiary Orb (Bottom Left Atmosphere) */
 .orb-tertiary {
-  width: 550px;
-  height: 550px;
+  width: 600px;
+  height: 600px;
   bottom: -150px;
-  left: -100px;
+  left: -120px;
   animation: ambientPulse 16s ease-in-out infinite alternate;
 }
 
 .orb-tertiary.blackTea {
   background: radial-gradient(
     circle,
-    rgba(58, 22, 9, 0.25) 0%,
-    rgba(9, 7, 9, 0.3) 55%,
+    rgba(58, 22, 9, 0.3) 0%,
+    rgba(9, 7, 9, 0.35) 55%,
     rgba(5, 3, 6, 0) 75%
   );
 }
@@ -95,8 +102,35 @@
 .orb-tertiary.exoticLychee {
   background: radial-gradient(
     circle,
-    rgba(56, 18, 37, 0.3) 0%,
-    rgba(18, 9, 19, 0.35) 55%,
+    rgba(56, 18, 37, 0.35) 0%,
+    rgba(18, 9, 19, 0.4) 55%,
+    rgba(5, 3, 6, 0) 75%
+  );
+}
+
+/* Quaternary Orb (Center Right Depth) */
+.orb-quaternary {
+  width: 480px;
+  height: 480px;
+  top: 55%;
+  right: 5%;
+  animation: ambientPulseAlt 18s ease-in-out infinite reverse;
+}
+
+.orb-quaternary.blackTea {
+  background: radial-gradient(
+    circle,
+    rgba(215, 164, 91, 0.15) 0%,
+    rgba(35, 15, 8, 0.25) 50%,
+    rgba(5, 3, 6, 0) 75%
+  );
+}
+
+.orb-quaternary.exoticLychee {
+  background: radial-gradient(
+    circle,
+    rgba(232, 154, 170, 0.16) 0%,
+    rgba(45, 12, 28, 0.28) 50%,
     rgba(5, 3, 6, 0) 75%
   );
 }
@@ -116,9 +150,9 @@
   height: 100%;
   background: radial-gradient(
     circle at center,
-    transparent 35%,
-    rgba(5, 3, 6, 0.75) 85%,
-    rgba(5, 3, 6, 0.95) 100%
+    transparent 30%,
+    rgba(5, 3, 6, 0.72) 82%,
+    rgba(5, 3, 6, 0.96) 100%
   );
   z-index: 2;
 }
@@ -128,7 +162,7 @@
     width: 380px;
     height: 380px;
   }
-  .orb-secondary, .orb-tertiary {
+  .orb-secondary, .orb-tertiary, .orb-quaternary {
     width: 280px;
     height: 280px;
   }

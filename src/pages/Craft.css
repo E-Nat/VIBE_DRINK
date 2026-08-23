@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   padding-top: var(--header-height);
+  overflow: hidden;
 }
 
 .craft-hero-section {
@@ -204,6 +205,37 @@
 .vessel-specs-list p {
   font-size: 13.5px;
   color: var(--color-text-muted);
+}
+
+.craft-action-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.craft-reserve-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+  font-family: var(--font-nav);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.craft-reserve-btn:hover {
+  background: var(--color-accent);
+  color: #050306;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 20px var(--color-accent-glow);
+  transform: translateY(-2px);
 }
 
 .vessel-card {

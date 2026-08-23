@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
+import { MagneticButton } from './MagneticButton';
 import './Button.css';
 
 export const Button = ({
@@ -14,6 +15,8 @@ export const Button = ({
   cursorText = 'CLICK',
   type = 'button',
   disabled = false,
+  magnetic = true,
+  magneticStrength = 18,
   className = '',
   ...props
 }) => {
@@ -27,8 +30,10 @@ export const Button = ({
 
   const buttonClasses = `vibe-btn vibe-btn-${variant} vibe-btn-${size} ${className}`;
 
+  let btnElement;
+
   if (to) {
-    return (
+    btnElement = (
       <Link
         to={to}
         className={buttonClasses}
@@ -38,18 +43,28 @@ export const Button = ({
         {content}
       </Link>
     );
+  } else {
+    btnElement = (
+      <button
+        type={type}
+        className={buttonClasses}
+        onClick={onClick}
+        disabled={disabled}
+        data-cursor-text={cursorText}
+        {...props}
+      >
+        {content}
+      </button>
+    );
   }
 
-  return (
-    <button
-      type={type}
-      className={buttonClasses}
-      onClick={onClick}
-      disabled={disabled}
-      data-cursor-text={cursorText}
-      {...props}
-    >
-      {content}
-    </button>
-  );
+  if (magnetic && !disabled) {
+    return (
+      <MagneticButton strength={magneticStrength} style={{ display: 'inline-block' }}>
+        {btnElement}
+      </MagneticButton>
+    );
+  }
+
+  return btnElement;
 };

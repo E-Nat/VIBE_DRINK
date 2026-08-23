@@ -7,17 +7,22 @@
   perspective: 1200px;
   user-select: none;
   width: 100%;
+  cursor: grab;
+}
+
+.bottle-component-root.is-dragging {
+  cursor: grabbing;
 }
 
 /* Sizes */
 .bottle-size-hero {
-  max-width: 440px;
-  height: 580px;
+  max-width: 460px;
+  height: 590px;
 }
 
 .bottle-size-showcase {
-  max-width: 380px;
-  height: 500px;
+  max-width: 400px;
+  height: 520px;
 }
 
 .bottle-size-compact {
@@ -31,28 +36,100 @@
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 340px;
-  height: 480px;
+  width: 380px;
+  height: 520px;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.55;
+  filter: blur(85px);
+  opacity: 0.6;
   pointer-events: none;
   z-index: 1;
   transition: background 1s ease, opacity 0.8s ease;
 }
 
 .bottle-ambient-glow.blackTea {
-  background: radial-gradient(circle, rgba(215, 164, 91, 0.4) 0%, rgba(58, 22, 9, 0.5) 50%, transparent 75%);
+  background: radial-gradient(
+    circle,
+    rgba(215, 164, 91, 0.45) 0%,
+    rgba(58, 22, 9, 0.6) 45%,
+    transparent 75%
+  );
 }
 
 .bottle-ambient-glow.exoticLychee {
-  background: radial-gradient(circle, rgba(232, 154, 170, 0.4) 0%, rgba(56, 18, 37, 0.55) 50%, transparent 75%);
+  background: radial-gradient(
+    circle,
+    rgba(232, 154, 170, 0.45) 0%,
+    rgba(56, 18, 37, 0.65) 45%,
+    transparent 75%
+  );
+}
+
+/* Floating Abstract Crystal Orbitals */
+.bottle-floating-orbitals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.orbital-shard {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(1px);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  animation: floatOrbital 6s ease-in-out infinite alternate;
+}
+
+.shard-1 {
+  width: 14px;
+  height: 14px;
+  top: 25%;
+  left: 12%;
+  animation-duration: 7s;
+}
+
+.shard-2 {
+  width: 22px;
+  height: 22px;
+  top: 60%;
+  right: 10%;
+  animation-duration: 9s;
+  animation-delay: -2s;
+}
+
+.shard-3 {
+  width: 10px;
+  height: 10px;
+  top: 80%;
+  left: 20%;
+  animation-duration: 5s;
+  animation-delay: -3s;
+}
+
+.orbital-shard.blackTea {
+  background: radial-gradient(circle, #FFE4B5 0%, #D7A45B 60%, transparent 100%);
+  box-shadow: 0 0 15px rgba(215, 164, 91, 0.8);
+}
+
+.orbital-shard.exoticLychee {
+  background: radial-gradient(circle, #FFE4ED 0%, #E89AAA 60%, transparent 100%);
+  box-shadow: 0 0 15px rgba(232, 154, 170, 0.8);
+}
+
+@keyframes floatOrbital {
+  0% {
+    transform: translateY(0) scale(0.9);
+  }
+  100% {
+    transform: translateY(-24px) scale(1.15);
+  }
 }
 
 /* Stage */
 .bottle-stage {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
   height: 100%;
   display: flex;
@@ -77,7 +154,7 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.75));
+  filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.85));
   pointer-events: none;
   border-radius: 12px;
 }
@@ -87,30 +164,78 @@
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.05) 45%,
-    rgba(255, 255, 255, 0.12) 50%,
-    transparent 55%
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 58%
   );
-  opacity: 0.6;
+  opacity: 0.75;
   border-radius: 12px;
   mix-blend-mode: overlay;
+  transition: transform 0.05s linear;
+}
+
+/* Monogram Engraving Plate */
+.bottle-monogram-overlay {
+  position: absolute;
+  bottom: 26%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4px 14px;
+  background: rgba(5, 3, 6, 0.65);
+  backdrop-filter: blur(8px);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  max-width: 75%;
+  animation: fadeIn 0.4s ease;
+}
+
+.bottle-monogram-overlay.blackTea {
+  border-color: rgba(215, 164, 91, 0.4);
+  box-shadow: 0 0 12px rgba(215, 164, 91, 0.3);
+}
+
+.bottle-monogram-overlay.exoticLychee {
+  border-color: rgba(232, 154, 170, 0.4);
+  box-shadow: 0 0 12px rgba(232, 154, 170, 0.3);
+}
+
+.monogram-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-accent-soft);
+  text-shadow: 0 0 8px var(--color-accent);
+}
+
+.monogram-sub {
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: var(--color-text-subtle);
+  margin-top: 1px;
 }
 
 /* Floor Shadow */
 .bottle-floor-shadow {
   position: absolute;
   bottom: 8px;
-  width: 65%;
-  height: 24px;
+  width: 70%;
+  height: 28px;
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.65) 45%,
     transparent 75%
   );
-  filter: blur(8px);
+  filter: blur(10px);
   z-index: 1;
   pointer-events: none;
   transition: transform 0.1s linear;
@@ -119,15 +244,15 @@
 /* Mirror Base Reflection */
 .bottle-reflection-layer {
   position: absolute;
-  bottom: -90px;
+  bottom: -95px;
   width: 100%;
-  height: 90px;
+  height: 95px;
   overflow: hidden;
-  opacity: 0.18;
+  opacity: 0.22;
   pointer-events: none;
   z-index: 1;
   transform: scaleY(-1);
-  filter: blur(2px);
+  filter: blur(3px);
 }
 
 .bottle-reflection-img {
@@ -140,23 +265,62 @@
 .bottle-reflection-fade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(5, 3, 6, 1) 0%, rgba(5, 3, 6, 0.2) 60%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(5, 3, 6, 1) 0%,
+    rgba(5, 3, 6, 0.2) 60%,
+    transparent 100%
+  );
+}
+
+/* 360 Drag Interaction Hint */
+.bottle-interactive-hint {
+  position: absolute;
+  bottom: -32px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  font-family: var(--font-nav);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--color-text-muted);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.hint-icon.spin-slow {
+  animation: spinSlow 8s linear infinite;
+  color: var(--color-accent);
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 1024px) {
   .bottle-size-hero {
-    max-width: 360px;
-    height: 480px;
+    max-width: 380px;
+    height: 500px;
   }
 }
 
 @media (max-width: 768px) {
   .bottle-size-hero {
-    max-width: 290px;
-    height: 400px;
+    max-width: 300px;
+    height: 420px;
   }
   .bottle-ambient-glow {
-    width: 240px;
-    height: 320px;
+    width: 260px;
+    height: 340px;
   }
 }

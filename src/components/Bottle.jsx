@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useFlavor } from '../context/FlavorContext';
+import { soundEngine } from '../utils/audio';
+import { Sparkles, RotateCw } from 'lucide-react';
 import './Bottle.css';
 
 export const Bottle = ({
@@ -8,19 +10,31 @@ export const Bottle = ({
   interactive = true,
   customImage = null,
   customAlt = null,
+  showEngraving = true,
   className = '',
 }) => {
-  const { currentProduct, currentFlavorKey, isSwitching } = useFlavor();
+  const { currentProduct, currentFlavorKey, isSwitching, engravingText } = useFlavor();
   const bottleRef = useRef(null);
   const containerRef = useRef(null);
   const glowRef = useRef(null);
   const shadowRef = useRef(null);
   const reflectionRef = useRef(null);
+  const lightSheenRef = useRef(null);
 
   const [displayImage, setDisplayImage] = useState(customImage || currentProduct.image);
   const [displayAlt, setDisplayAlt] = useState(customAlt || currentProduct.name);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragProgress, setDragProgress] = useState(0);
 
-  // Mouse tracking with smooth lerp
+  // Physics state
+  const dragRef = useRef({
+    startX: 0,
+    currentRotY: 0,
+    targetRotY: 0,
+    isPointerDown: false,
+    lastClickSound: 0,
+  });
+
   const mouseState = useRef({
     targetX: 0,
     targetY: 0,
@@ -34,38 +48,36 @@ export const Bottle = ({
 
   // Handle Flavor Switching GSAP Timeline
   useEffect(() => {
-    if (customImage) return; // Do not auto-switch if static customImage is provided
+    if (customImage) return;
 
     const bottle = bottleRef.current;
     const glow = glowRef.current;
     if (!bottle) return;
 
-    // Timeline for flavor transition
     const tl = gsap.timeline({
       defaults: { ease: 'power2.inOut' },
     });
 
     tl.to(bottle, {
-      rotateY: 45,
-      rotateZ: -4,
-      scale: 0.88,
-      filter: 'blur(8px)',
-      opacity: 0.4,
+      rotateY: 55,
+      rotateZ: -5,
+      scale: 0.86,
+      filter: 'blur(10px)',
+      opacity: 0.3,
       duration: 0.35,
     })
       .add(() => {
-        // Change image at peak of turn
         setDisplayImage(currentProduct.image);
         setDisplayAlt(currentProduct.name);
       })
       .fromTo(
         bottle,
         {
-          rotateY: -45,
-          rotateZ: 4,
-          scale: 0.88,
-          filter: 'blur(8px)',
-          opacity: 0.4,
+          rotateY: -55,
+          rotateZ: 5,
+          scale: 0.86,
+          filter: 'blur(10px)',
+          opacity: 0.3,
         },
         {
           rotateY: 0,
@@ -73,7 +85,7 @@ export const Bottle = ({
           scale: 1,
           filter: 'blur(0px)',
           opacity: 1,
-          duration: 0.5,
+          duration: 0.55,
           ease: 'power3.out',
         }
       );
@@ -81,8 +93,8 @@ export const Bottle = ({
     if (glow) {
       gsap.fromTo(
         glow,
-        { scale: 0.8, opacity: 0.2 },
-        { scale: 1.15, opacity: 0.85, duration: 0.6, yoyo: true, repeat: 1 }
+        { scale: 0.75, opacity: 0.2 },
+        { scale: 1.25, opacity: 0.9, duration: 0.65, yoyo: true, repeat: 1 }
       );
     }
 
@@ -91,7 +103,7 @@ export const Bottle = ({
     };
   }, [currentFlavorKey, currentProduct, customImage]);
 
-  // Mouse move tilt interaction
+  // Pointer drag & mousemove physics loop
   useEffect(() => {
     if (!interactive) return;
 
@@ -101,63 +113,101 @@ export const Bottle = ({
 
     let rafId;
 
-    const handleMouseMove = (e) => {
-      const rect = container.getBoundingClientRect();
-      // Center coordinates (-1 to 1)
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    const handlePointerDown = (e) => {
+      dragRef.current.isPointerDown = true;
+      dragRef.current.startX = e.clientX;
+      setIsDragging(true);
+      soundEngine.playClick(900);
+    };
 
-      // Soft constraints
-      mouseState.current.targetX = Math.max(-1, Math.min(1, x)) * 18;
-      mouseState.current.targetY = Math.max(-1, Math.min(1, y)) * 14;
-      mouseState.current.targetRotateY = Math.max(-1, Math.min(1, x)) * 12; // tilt left/right
-      mouseState.current.targetRotateX = -Math.max(-1, Math.min(1, y)) * 10; // tilt up/down
+    const handlePointerMove = (e) => {
+      if (dragRef.current.isPointerDown) {
+        const deltaX = e.clientX - dragRef.current.startX;
+        dragRef.current.targetRotY += deltaX * 0.45;
+        dragRef.current.startX = e.clientX;
+
+        // Subtle tactile click every few degrees
+        const now = Date.now();
+        if (now - dragRef.current.lastClickSound > 120 && Math.abs(deltaX) > 2) {
+          soundEngine.playClick(600 + Math.abs(deltaX) * 15);
+          dragRef.current.lastClickSound = now;
+        }
+      } else {
+        const rect = container.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+        mouseState.current.targetX = Math.max(-1, Math.min(1, x)) * 20;
+        mouseState.current.targetY = Math.max(-1, Math.min(1, y)) * 15;
+        mouseState.current.targetRotateY = Math.max(-1, Math.min(1, x)) * 14;
+        mouseState.current.targetRotateX = -Math.max(-1, Math.min(1, y)) * 12;
+      }
+    };
+
+    const handlePointerUp = () => {
+      dragRef.current.isPointerDown = false;
+      setIsDragging(false);
     };
 
     const handleMouseLeave = () => {
-      mouseState.current.targetX = 0;
-      mouseState.current.targetY = 0;
-      mouseState.current.targetRotateY = 0;
-      mouseState.current.targetRotateX = 0;
+      if (!dragRef.current.isPointerDown) {
+        mouseState.current.targetX = 0;
+        mouseState.current.targetY = 0;
+        mouseState.current.targetRotateY = 0;
+        mouseState.current.targetRotateX = 0;
+      }
     };
 
-    // Smooth physics loop
     const animate = () => {
       const s = mouseState.current;
-      // Interpolation factor
-      const lerp = 0.075;
+      const d = dragRef.current;
+      const lerp = 0.08;
 
       s.currentX += (s.targetX - s.currentX) * lerp;
       s.currentY += (s.targetY - s.currentY) * lerp;
       s.currentRotateY += (s.targetRotateY - s.currentRotateY) * lerp;
       s.currentRotateX += (s.targetRotateX - s.currentRotateX) * lerp;
 
+      // Inertial spin lerp
+      d.currentRotY += (d.targetRotY - d.currentRotY) * 0.1;
+
+      const totalRotY = s.currentRotateY + d.currentRotY;
+      const totalRotX = s.currentRotateX;
+
       if (bottle) {
         bottle.style.transform = `
           translate3d(${s.currentX}px, ${s.currentY}px, 0px)
-          rotateX(${s.currentRotateX}deg)
-          rotateY(${s.currentRotateY}deg)
+          rotateX(${totalRotX}deg)
+          rotateY(${totalRotY}deg)
         `;
+      }
+
+      if (lightSheenRef.current) {
+        const sheenOffset = ((totalRotY % 360) / 360) * 100;
+        lightSheenRef.current.style.transform = `translateX(${sheenOffset}%)`;
       }
 
       if (shadowRef.current) {
         shadowRef.current.style.transform = `
           translateX(${s.currentX * 0.7}px)
-          scale(${1 + Math.abs(s.currentY) * 0.005})
+          scale(${1 + Math.abs(s.currentY) * 0.006})
         `;
       }
 
       rafId = requestAnimationFrame(animate);
     };
 
-    const targetElement = window; // Global window mousemove feels more natural
-    targetElement.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerup', handlePointerUp);
+    container.addEventListener('pointerdown', handlePointerDown);
     container.addEventListener('mouseleave', handleMouseLeave);
     animate();
 
     return () => {
       cancelAnimationFrame(rafId);
-      targetElement.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      container.removeEventListener('pointerdown', handlePointerDown);
       container.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [interactive]);
@@ -165,14 +215,21 @@ export const Bottle = ({
   return (
     <div
       ref={containerRef}
-      className={`bottle-component-root bottle-size-${size} ${className}`}
-      data-cursor-text="VIBE"
+      className={`bottle-component-root bottle-size-${size} ${isDragging ? 'is-dragging' : ''} ${className}`}
+      data-cursor-text="ROTATE 360°"
     >
       {/* Ambient Halo Glow */}
       <div
         ref={glowRef}
         className={`bottle-ambient-glow ${currentFlavorKey}`}
       />
+
+      {/* Floating Abstract Crystal Orbitals */}
+      <div className="bottle-floating-orbitals" aria-hidden="true">
+        <div className={`orbital-shard shard-1 ${currentFlavorKey}`} />
+        <div className={`orbital-shard shard-2 ${currentFlavorKey}`} />
+        <div className={`orbital-shard shard-3 ${currentFlavorKey}`} />
+      </div>
 
       {/* Floating 3D Bottle Stage */}
       <div className="bottle-stage">
@@ -185,8 +242,16 @@ export const Bottle = ({
             draggable="false"
           />
 
-          {/* Subtle light reflection sheen */}
-          <div className="bottle-light-sheen" />
+          {/* Dynamic Light Sheen Flare */}
+          <div ref={lightSheenRef} className="bottle-light-sheen" />
+
+          {/* Live Custom Monogram Engraving Plate */}
+          {showEngraving && engravingText && (
+            <div className={`bottle-monogram-overlay ${currentFlavorKey}`}>
+              <span className="monogram-text font-editorial">{engravingText}</span>
+              <span className="monogram-sub font-nav">LIMITED ALLOCATION</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -203,6 +268,14 @@ export const Bottle = ({
         />
         <div className="bottle-reflection-fade" />
       </div>
+
+      {/* 360 Drag Interaction Badge */}
+      {interactive && size === 'hero' && (
+        <div className="bottle-interactive-hint">
+          <RotateCw size={13} className="hint-icon spin-slow" />
+          <span>DRAG 360° INTERACTIVE</span>
+        </div>
+      )}
     </div>
   );
 };

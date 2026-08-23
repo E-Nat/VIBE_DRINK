@@ -6,6 +6,8 @@ import { AmbientBackground } from './components/AmbientBackground';
 import { AgeGate } from './components/AgeGate';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { ScrollProgress } from './components/ScrollProgress';
+import { AllocationDrawer } from './components/AllocationDrawer';
 import { PageTransition } from './components/PageTransition';
 
 // Pages
@@ -40,11 +42,17 @@ export const App = () => {
       {/* Luxury Custom Interactive Cursor (Desktop) */}
       <CustomCursor />
 
-      {/* Dynamic Ambient Background with Glow Blobs & Subtle Embers */}
+      {/* Dynamic Ambient Background with Generative Abstract Shapes & Embers */}
       <AmbientBackground />
 
       {/* Fine Noise Texture Overlay */}
       <div className="noise-overlay" aria-hidden="true" />
+
+      {/* Subtle Right Scroll Progress Indicator */}
+      <ScrollProgress />
+
+      {/* Sliding Concierge Allocation Drawer */}
+      <AllocationDrawer />
 
       <div className="app-layout">
         {/* Floating Glass Navigation */}

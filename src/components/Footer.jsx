@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Instagram, Facebook, Mail, ArrowUp } from 'lucide-react';
+import { Instagram, Facebook, Mail, ArrowUp, CheckCircle2 } from 'lucide-react';
 import { useFlavor } from '../context/FlavorContext';
+import { soundEngine } from '../utils/audio';
 import './Footer.css';
 
 export const Footer = () => {
   const { currentProduct } = useFlavor();
+  const [subscribed, setSubscribed] = useState(false);
+  const [email, setEmail] = useState('');
 
   const scrollToTop = () => {
+    soundEngine.playClick(600);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    soundEngine.playChime(784, 'sine', 1.2);
+    setSubscribed(true);
+  };
+
   const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/story', label: 'Story' },
-    { to: '/flavours', label: 'Flavours' },
-    { to: '/craft', label: 'Craft' },
-    { to: '/reviews', label: 'Reviews' },
-    { to: '/contact', label: 'Contact' },
+    { to: '/', label: 'Experience' },
+    { to: '/flavours', label: 'Portfolio' },
+    { to: '/craft', label: 'Alchemy' },
+    { to: '/story', label: 'Philosophy' },
+    { to: '/reviews', label: 'Voices' },
+    { to: '/contact', label: 'Concierge' },
   ];
 
   return (
@@ -36,7 +47,7 @@ export const Footer = () => {
               <span className="footer-logo-text">VIBE</span>
             </div>
             <p className="footer-brand-tagline">
-              Ultra-premium alcoholic spirits designed with character for moments that leave an impression.
+              Ultra-premium spirits engineered with character for nocturnal moments that leave an unforgettable impression.
             </p>
             <div className="footer-social-links">
               <a
@@ -118,30 +129,34 @@ export const Footer = () => {
           <div className="footer-newsletter-col">
             <span className="footer-col-title">Private Concierge</span>
             <p className="footer-newsletter-text">
-              Subscribe for private releases, evening event invitations, and tasting notes.
+              Subscribe for private releases, evening invitations, and botanical tasting notes.
             </p>
-            <form
-              className="footer-newsletter-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert('Thank you for subscribing to the VIBE Private Registry.');
-              }}
-            >
-              <input
-                type="email"
-                placeholder="Enter your email"
-                required
-                className="footer-input"
-                aria-label="Email address for newsletter"
-              />
-              <button
-                type="submit"
-                className="footer-submit-btn"
-                data-cursor-text="JOIN"
-              >
-                Join
-              </button>
-            </form>
+
+            {subscribed ? (
+              <div className="footer-subscribed-msg glass-panel">
+                <CheckCircle2 size={16} className="sub-icon" />
+                <span>You are registered with the Private Concierge Registry.</span>
+              </div>
+            ) : (
+              <form className="footer-newsletter-form" onSubmit={handleSubscribe}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  className="footer-input"
+                  aria-label="Email address for newsletter"
+                />
+                <button
+                  type="submit"
+                  className="footer-submit-btn"
+                  data-cursor-text="JOIN"
+                >
+                  Join
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
@@ -149,14 +164,14 @@ export const Footer = () => {
         <div className="footer-responsible-banner glass-panel">
           <span className="responsible-tag">RESPONSIBLE DRINKING</span>
           <p className="responsible-text">
-            Please enjoy responsibly. You must be of legal drinking age in your country to consume alcohol.
+            Please enjoy responsibly. You must be of legal drinking age in your country to purchase or consume alcohol.
           </p>
         </div>
 
         {/* Bottom Tier */}
         <div className="footer-bottom-row">
           <p className="footer-copyright">
-            © 2026 VIBE. All rights reserved.
+            © 2026 VIBE Spirits Ltd. All rights reserved.
           </p>
 
           <button
