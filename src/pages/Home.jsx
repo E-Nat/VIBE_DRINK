@@ -7,7 +7,6 @@ import { Hero } from '../components/Hero';
 import { KineticMarquee } from '../components/KineticMarquee';
 import { LiquidTransition } from '../components/LiquidTransition';
 import { StoryReveal } from '../components/StoryReveal';
-import { FlavorExperienceSection } from '../components/FlavorExperienceSection';
 import { BottleSplit } from '../components/BottleSplit';
 import { SensoryLab } from '../components/SensoryLab';
 import { FlavorOrbit } from '../components/FlavorOrbit';
@@ -24,7 +23,7 @@ import { Button } from '../components/Button';
 import { useFlavor } from '../context/FlavorContext';
 import { reviewsData } from '../data/reviews';
 import { soundEngine } from '../utils/audio';
-import { Sparkles, ArrowRight, ShieldCheck, GlassWater, Flame, Compass } from 'lucide-react';
+import { Sparkles, ArrowRight, GlassWater, Flame } from 'lucide-react';
 import './Home.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -145,37 +144,32 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* 4. Liquid Transition (Requirement 15) */}
+      {/* 4. Liquid Transition */}
       <LiquidTransition />
 
-      {/* 5. Act III: Story Reveal (Requirement 10: "Born to stand apart.") */}
+      {/* 5. Act III: Story Reveal (04 STORY) */}
       <div id="story">
         <StoryReveal />
       </div>
 
-      {/* 6. Act IV: Immersive Flavour Experience (Requirements 11, 12: "CHOOSE YOUR VIBE") */}
-      <div id="dual">
-        <FlavorExperienceSection />
-      </div>
-
-      {/* 7. Act V: Interactive Bottle Split Section (Requirement 17) */}
-      <div className="cinematic-split-section">
+      {/* 6. Act IV: The Definitive Duality Stage (BLACK TEA × EXOTIC LYCHEE) */}
+      <div id="dual" className="cinematic-split-section">
         <div className="container">
           <BottleSplit onSelectFlavor={(key) => setFlavor(key)} />
         </div>
       </div>
 
-      {/* 8. Liquid Transition */}
+      {/* 7. Liquid Transition */}
       <LiquidTransition flip />
 
-      {/* 9. Act VI: Molecular Sensory Matrix & Flavor Orbit (Requirements 14, 24) */}
+      {/* 8. Act V: Molecular Sensory Matrix & Flavor Orbit */}
       <div className="cinematic-sensory-stage">
         <div className="container">
           <SensoryLab />
         </div>
       </div>
 
-      {/* 10. Flavor Orbit Visualization (Requirement 14) */}
+      {/* 9. Flavor Orbit Visualization */}
       <div className="cinematic-orbit-stage">
         <div className="container">
           <div className="orbit-section-header">
@@ -190,18 +184,18 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* 11. Act VII: Horizontal Scroll Section (Requirement 16: "FIND YOUR VIBE") */}
+      {/* 10. Act VI: Horizontal Scroll Section ("FIND YOUR VIBE") */}
       <HorizontalScrollSection />
 
-      {/* 12. Act VIII: Brand Philosophy (Requirement 18: "WHAT IS VIBE?") */}
+      {/* 11. Act VII: Brand Philosophy ("WHAT IS VIBE?") */}
       <BrandPhilosophy />
 
-      {/* 13. Act IX: Product Scroll Rotation & Craft (Requirements 13, 25: "CRAFTED WITH CHARACTER") */}
+      {/* 12. Act VIII: Product Scroll Rotation & Craft */}
       <div id="craft">
         <ProductScrollRotation />
       </div>
 
-      {/* 14. Act X: The Nocturnal Ritual Spatial Horizon */}
+      {/* 13. Act IX: The Nocturnal Ritual Spatial Horizon */}
       <div className="cinematic-ritual-stage" aria-label="Night Experience">
         <div className="container ritual-grid">
           <div className="ritual-image-column">
@@ -275,22 +269,22 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* 15. Act XI: After Dark Experience (Requirement 26: "AFTER DARK") */}
+      {/* 14. Act X: After Dark Experience */}
       <div id="dark">
         <AfterDarkSection />
       </div>
 
-      {/* 16. Act XII: Bespoke Monogram Engraving & Allocation Atelier */}
+      {/* 15. Act XI: Bespoke Monogram Engraving & Allocation Atelier */}
       <div className="cinematic-atelier-stage">
         <div className="container">
           <MonogramEngraver />
         </div>
       </div>
 
-      {/* 17. Act XIII: Social Moments Gallery (Requirement 27: "SHARE THE VIBE") */}
+      {/* 16. Act XII: Social Moments Gallery ("SHARE THE VIBE") */}
       <SocialMoments />
 
-      {/* 18. Act XIV: Tastemaker Voices (Requirement 28) */}
+      {/* 17. Act XIII: Tastemaker Voices */}
       <div id="reviews" className="cinematic-voices-stage" aria-label="Tastemaker Impressions">
         <div className="container">
           <div className="voices-header">
@@ -326,7 +320,7 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* 19. Act XV: Final Spatial Invitation (Requirements 29, 30) */}
+      {/* 18. Act XIV: Final Spatial Invitation */}
       <div id="contact" className="cinematic-final-stage" aria-label="Step Into VIBE">
         <div className="container">
           <div className="home-cta-card glass-panel">

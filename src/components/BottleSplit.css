@@ -6,8 +6,41 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 520px;
+  min-height: 540px;
+  padding: 60px 20px;
   perspective: 1200px;
+  overflow: hidden;
+}
+
+/* Background Soft Moving Light Drift */
+.duality-light-drift {
+  position: absolute;
+  top: 40%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(215, 164, 91, 0.25) 0%, rgba(232, 154, 170, 0.2) 60%, transparent 75%);
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+/* Background Geometric Lines */
+.duality-geom-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  color: var(--color-accent);
+}
+
+.duality-lines-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .split-side {
@@ -16,14 +49,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 30px 20px;
   cursor: pointer;
-  transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease;
+  z-index: 2;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .split-side.dimmed {
   opacity: 0.35;
-  filter: blur(2px) grayscale(40%);
+  filter: blur(1.5px) grayscale(25%);
   transform: scale(0.96);
 }
 
@@ -32,33 +68,35 @@
   transform: scale(1.04);
 }
 
+/* Ambient Glow */
 .split-ambient-glow {
   position: absolute;
-  width: 280px;
-  height: 380px;
+  width: 320px;
+  height: 420px;
   border-radius: 50%;
-  filter: blur(60px);
+  filter: blur(70px);
   pointer-events: none;
-  opacity: 0.4;
-  transition: opacity 0.5s ease;
+  opacity: 0.45;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .bt-split-glow {
-  background: radial-gradient(circle, rgba(215, 164, 91, 0.45) 0%, rgba(58, 22, 9, 0.6) 50%, transparent 75%);
+  background: radial-gradient(circle, rgba(215, 164, 91, 0.5) 0%, rgba(58, 22, 9, 0.6) 50%, transparent 75%);
 }
 
 .el-split-glow {
-  background: radial-gradient(circle, rgba(232, 154, 170, 0.45) 0%, rgba(56, 18, 37, 0.6) 50%, transparent 75%);
+  background: radial-gradient(circle, rgba(232, 154, 170, 0.5) 0%, rgba(56, 18, 37, 0.6) 50%, transparent 75%);
 }
 
 .split-side:hover .split-ambient-glow {
-  opacity: 0.75;
+  opacity: 0.85;
+  transform: scale(1.1);
 }
 
 .split-bottle-stage {
   position: relative;
   z-index: 2;
-  height: 360px;
+  height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,30 +105,35 @@
 .split-bottle-img {
   max-height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.85));
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.split-side:hover .split-bottle-img {
+  transform: scale(1.05);
+}
+
 .split-side-info {
-  margin-top: 20px;
+  margin-top: 24px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   z-index: 3;
 }
 
 .split-flavor-name {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #FFFFFF;
+  letter-spacing: 0.05em;
 }
 
 .split-flavor-tagline {
   font-family: var(--font-nav);
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent-soft);
 }
@@ -102,7 +145,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 28px;
+  user-select: none;
 }
 
 .split-vibe-logo {
@@ -113,8 +157,8 @@
 }
 
 .split-monogram-circle {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   border: 1.5px solid var(--color-accent);
   display: flex;
@@ -124,36 +168,39 @@
   font-size: 20px;
   font-weight: 700;
   color: var(--color-accent);
-  margin-bottom: 8px;
-  box-shadow: 0 0 20px var(--color-accent-glow);
+  margin-bottom: 10px;
+  box-shadow: 0 0 22px var(--color-accent-glow);
 }
 
 .split-center-title {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 800;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   color: #FFFFFF;
   line-height: 1;
+  margin: 0;
 }
 
 .split-center-sub {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.28em;
   color: var(--color-accent-soft);
   text-transform: uppercase;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .bottle-split-root {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 36px;
+    min-height: auto;
   }
   .split-center-divider {
     order: -1;
+    margin-bottom: 12px;
   }
   .split-bottle-stage {
-    height: 260px;
+    height: 300px;
   }
 }
