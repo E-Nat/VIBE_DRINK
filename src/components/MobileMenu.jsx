@@ -3,13 +3,14 @@ import { NavLink } from 'react-router-dom';
 import gsap from 'gsap';
 import { useFlavor } from '../context/FlavorContext';
 import { useScrollLock } from '../hooks/useScrollLock';
-import { Sparkles, Instagram, Facebook } from 'lucide-react';
+import { soundEngine } from '../utils/audio';
+import { ShoppingBag, Sparkles, Instagram, Facebook } from 'lucide-react';
 import './MobileMenu.css';
 
 export const MobileMenu = ({ isOpen, onClose, links }) => {
   const menuRef = useRef(null);
   const linksRef = useRef([]);
-  const { currentProduct, toggleFlavor, currentFlavorKey } = useFlavor();
+  const { currentProduct, currentFlavorKey, toggleFlavor, setIsCartOpen, cartItems } = useFlavor();
 
   useScrollLock(isOpen);
 
@@ -19,48 +20,47 @@ export const MobileMenu = ({ isOpen, onClose, links }) => {
         opacity: 1,
         y: 0,
         pointerEvents: 'auto',
-        duration: 0.45,
+        duration: 0.4,
         ease: 'power3.out',
       });
 
       gsap.fromTo(
         linksRef.current,
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: 16 },
         {
           opacity: 1,
           y: 0,
           duration: 0.35,
-          stagger: 0.06,
+          stagger: 0.05,
           ease: 'power2.out',
-          delay: 0.15,
+          delay: 0.1,
         }
       );
     } else {
       gsap.to(menuRef.current, {
         opacity: 0,
-        y: -15,
+        y: -12,
         pointerEvents: 'none',
-        duration: 0.3,
+        duration: 0.25,
         ease: 'power2.in',
       });
     }
   }, [isOpen]);
 
+  const totalCartQty = cartItems.reduce((acc, i) => acc + i.qty, 0);
+
+  const handleOpenAllocation = () => {
+    soundEngine.playClick(800);
+    onClose();
+    setIsCartOpen(true);
+  };
+
+  const flavorLabel = currentFlavorKey === 'blackTea' ? 'Black Tea' : 'Lychee';
+
   return (
     <div ref={menuRef} className="mobile-menu-drawer glass-panel" aria-hidden={!isOpen}>
       <div className="mobile-menu-inner">
-        <div className="mobile-menu-flavor-toggle">
-          <span className="mobile-flavor-label">Active Atmosphere</span>
-          <button
-            type="button"
-            className="mobile-flavor-pill"
-            onClick={toggleFlavor}
-          >
-            <span className="mobile-flavor-dot" />
-            <span>{currentProduct.name}</span>
-          </button>
-        </div>
-
+        {/* Top 4 Core Navigation Links */}
         <nav className="mobile-nav">
           <ul className="mobile-nav-list">
             {links.map((link, idx) => (
@@ -74,7 +74,10 @@ export const MobileMenu = ({ isOpen, onClose, links }) => {
                   className={({ isActive }) =>
                     `mobile-nav-link ${isActive ? 'active' : ''}`
                   }
-                  onClick={onClose}
+                  onClick={() => {
+                    soundEngine.playClick(700);
+                    onClose();
+                  }}
                 >
                   <span className="mobile-nav-number">0{idx + 1}</span>
                   <span className="mobile-nav-title">{link.label}</span>
@@ -84,36 +87,35 @@ export const MobileMenu = ({ isOpen, onClose, links }) => {
           </ul>
         </nav>
 
-        <div className="mobile-menu-footer">
-          <NavLink
-            to="/flavours"
-            className="mobile-cta-btn"
-            onClick={onClose}
+        {/* Flavor Switcher Row */}
+        <div className="mobile-menu-flavor-toggle">
+          <span className="mobile-flavor-label">Atmosphere</span>
+          <button
+            type="button"
+            className="mobile-flavor-pill"
+            onClick={() => {
+              soundEngine.playClick(800);
+              toggleFlavor();
+            }}
           >
-            <Sparkles size={16} />
-            <span>Discover VIBE</span>
-          </NavLink>
+            <span className="mobile-flavor-dot" />
+            <span>{flavorLabel}</span>
+          </button>
+        </div>
 
-          <div className="mobile-socials">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mobile-social-link"
-              aria-label="Instagram"
-            >
-              <Instagram size={18} />
-            </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mobile-social-link"
-              aria-label="Facebook"
-            >
-              <Facebook size={18} />
-            </a>
-          </div>
+        {/* Mobile Allocation CTA */}
+        <div className="mobile-menu-footer">
+          <button
+            type="button"
+            className="mobile-allocation-btn"
+            onClick={handleOpenAllocation}
+          >
+            <ShoppingBag size={16} />
+            <span>ALLOCATION</span>
+            {totalCartQty > 0 && (
+              <span className="mobile-bag-count">{totalCartQty}</span>
+            )}
+          </button>
 
           <p className="mobile-responsible-tag">Please enjoy responsibly.</p>
         </div>

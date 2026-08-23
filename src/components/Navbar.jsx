@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Sparkles, Volume2, VolumeX, ShoppingBag } from 'lucide-react';
+import { Menu, X, Volume2, VolumeX, ShoppingBag } from 'lucide-react';
 import { MobileMenu } from './MobileMenu';
 import { useFlavor } from '../context/FlavorContext';
 import { soundEngine } from '../utils/audio';
@@ -11,7 +11,6 @@ export const Navbar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
   const {
-    currentProduct,
     currentFlavorKey,
     toggleFlavor,
     isAudioActive,
@@ -35,11 +34,9 @@ export const Navbar = () => {
 
   const navLinks = [
     { to: '/', label: 'Experience' },
-    { to: '/flavours', label: 'Portfolio' },
-    { to: '/craft', label: 'Alchemy' },
-    { to: '/story', label: 'Philosophy' },
-    { to: '/reviews', label: 'Voices' },
-    { to: '/contact', label: 'Concierge' },
+    { to: '/story', label: 'Story' },
+    { to: '/flavours', label: 'Flavours' },
+    { to: '/craft', label: 'Craft' },
   ];
 
   const totalCartQty = cartItems.reduce((acc, i) => acc + i.qty, 0);
@@ -48,6 +45,8 @@ export const Navbar = () => {
     soundEngine.playClick(800);
     setIsCartOpen(true);
   };
+
+  const flavorLabel = currentFlavorKey === 'blackTea' ? 'Black Tea' : 'Lychee';
 
   return (
     <header className={`navbar-wrapper ${isScrolled ? 'scrolled' : ''}`}>
@@ -63,7 +62,7 @@ export const Navbar = () => {
           <span className="navbar-logo-text">VIBE</span>
         </NavLink>
 
-        {/* Center: Desktop Nav Links */}
+        {/* Center: Desktop Nav Links (Clean 4-item core navigation) */}
         <ul className="navbar-links" role="menubar">
           {navLinks.map((link) => (
             <li key={link.to} role="none">
@@ -82,30 +81,20 @@ export const Navbar = () => {
           ))}
         </ul>
 
-        {/* Right: Sound Synth, Flavor Pill & Allocation Bag */}
+        {/* Right: Flavor Switcher & Allocation Bag */}
         <div className="navbar-actions">
-          {/* Audio Synthesizer Toggle */}
+          {/* Subtle Audio Toggle */}
           <button
             type="button"
             className={`navbar-audio-btn ${isAudioActive ? 'active' : ''}`}
             onClick={toggleAudio}
-            title={isAudioActive ? 'Mute Ambient Audio' : 'Activate Ambient Nocturnal Sound'}
+            title={isAudioActive ? 'Mute Sound' : 'Play Sound'}
             data-cursor-text={isAudioActive ? 'MUTE' : 'SOUND'}
           >
             {isAudioActive ? (
-              <>
-                <Volume2 size={16} className="audio-icon" />
-                <div className="audio-bars" aria-hidden="true">
-                  <span className="bar bar-1" />
-                  <span className="bar bar-2" />
-                  <span className="bar bar-3" />
-                </div>
-              </>
+              <Volume2 size={15} className="audio-icon" />
             ) : (
-              <>
-                <VolumeX size={16} className="audio-icon" />
-                <span className="audio-label">SOUND</span>
-              </>
+              <VolumeX size={15} className="audio-icon" />
             )}
           </button>
 
@@ -118,20 +107,18 @@ export const Navbar = () => {
             title="Switch Active Atmosphere"
           >
             <span className="flavor-badge-dot" />
-            <span className="flavor-badge-text">
-              {currentFlavorKey === 'blackTea' ? 'Black Tea' : 'Lychee'}
-            </span>
+            <span className="flavor-badge-text">{flavorLabel}</span>
           </button>
 
-          {/* Allocation Bag Drawer Trigger */}
+          {/* Allocation Bag CTA */}
           <button
             type="button"
             className="navbar-bag-btn"
             onClick={handleOpenCart}
-            data-cursor-text="BAG"
+            data-cursor-text="ALLOCATION"
             title="Open Allocation Bag"
           >
-            <ShoppingBag size={16} />
+            <ShoppingBag size={15} />
             <span className="bag-label">ALLOCATION</span>
             {totalCartQty > 0 && (
               <span className="bag-badge font-nav">{totalCartQty}</span>
@@ -147,7 +134,7 @@ export const Navbar = () => {
             aria-expanded={isMobileOpen}
             data-cursor-text="MENU"
           >
-            {isMobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </nav>

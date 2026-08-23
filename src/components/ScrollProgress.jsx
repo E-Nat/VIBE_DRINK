@@ -12,12 +12,12 @@ export const ScrollProgress = () => {
       const progress = totalHeight > 0 ? (currentScroll / totalHeight) * 100 : 0;
       setScrollPercent(Math.min(100, Math.max(0, progress)));
 
-      // Detect active section
+      // Exact DOM order of sections on the page
       const sections = [
         { id: 'hero', label: '01 HOME' },
         { id: 'manifesto', label: '02 STATEMENT' },
-        { id: 'dual', label: '03 FLAVOURS' },
         { id: 'story', label: '04 STORY' },
+        { id: 'dual', label: '03 FLAVOURS' },
         { id: 'craft', label: '05 CRAFT' },
         { id: 'dark', label: '06 AFTER DARK' },
         { id: 'reviews', label: '07 REVIEWS' },
@@ -37,6 +37,7 @@ export const ScrollProgress = () => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
