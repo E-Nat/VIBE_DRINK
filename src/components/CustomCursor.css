@@ -1,0 +1,98 @@
+.custom-cursor-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-cursor-container.visible {
+  opacity: 1;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  margin-left: -3.5px;
+  background-color: var(--color-accent);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: transform 0.15s ease, background-color 0.4s ease;
+  box-shadow: 0 0 10px var(--color-accent);
+}
+
+.cursor-dot.hovered {
+  transform: scale(0);
+}
+
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 38px;
+  height: 38px;
+  margin-top: -19px;
+  margin-left: -19px;
+  border: 1.5px solid var(--color-accent-soft);
+  border-radius: 50%;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              margin 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease,
+              border-color 0.4s ease,
+              box-shadow 0.3s ease;
+}
+
+.cursor-ring.hovered {
+  width: 64px;
+  height: 64px;
+  margin-top: -32px;
+  margin-left: -32px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-accent);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px var(--color-accent-glow);
+}
+
+.cursor-ring.has-text {
+  width: 84px;
+  height: 84px;
+  margin-top: -42px;
+  margin-left: -42px;
+  background-color: rgba(5, 3, 6, 0.85);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 30px var(--color-accent-glow-strong);
+}
+
+.cursor-text {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  text-align: center;
+  user-select: none;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.cursor-ring.clicking {
+  transform: scale(0.85);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}

@@ -1,0 +1,101 @@
+/* Ambient Glowing Blobs Animation */
+@keyframes ambientPulse {
+  0%, 100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.18) translate(30px, -20px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes ambientPulseAlt {
+  0%, 100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.22) translate(-25px, 25px);
+    opacity: 0.65;
+  }
+}
+
+/* Subtle bottle float when idle */
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(0.4deg);
+  }
+}
+
+/* Shimmer on luxury accents */
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Star/Particle float */
+@keyframes particleDrift {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-120px) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+/* Radar pulse for interactive hot-spots */
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 var(--color-accent-glow-strong);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 16px rgba(215, 164, 91, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(215, 164, 91, 0);
+  }
+}
+
+.animate-float {
+  animation: subtleFloat 6s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: ambientPulse 12s ease-in-out infinite;
+}
+
+.animate-pulse-alt {
+  animation: ambientPulseAlt 14s ease-in-out infinite;
+}
+
+.text-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-accent) 0%,
+    #FFF 50%,
+    var(--color-accent) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 5s linear infinite;
+}

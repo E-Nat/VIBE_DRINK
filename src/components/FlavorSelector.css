@@ -1,0 +1,223 @@
+.flavor-selector-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.flavor-selector-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flavor-selector-sub {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-accent-soft);
+  text-transform: uppercase;
+}
+
+.flavor-selector-title {
+  font-family: var(--font-editorial);
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.flavor-selector-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.flavor-selector-container.layout-horizontal .flavor-selector-grid {
+  flex-direction: row;
+}
+
+/* Flavor Card Styling */
+.flavor-card {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px;
+  text-align: left;
+  border-radius: 18px;
+  background: rgba(18, 12, 19, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.flavor-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(24, 16, 26, 0.7);
+}
+
+/* Active State */
+.flavor-card.active.blackTea {
+  border-color: var(--flavor-bt-accent);
+  background: rgba(28, 16, 14, 0.8);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px var(--flavor-bt-glow);
+}
+
+.flavor-card.active.exoticLychee {
+  border-color: var(--flavor-el-accent);
+  background: rgba(38, 15, 29, 0.8);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px var(--flavor-el-glow);
+}
+
+.flavor-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.flavor-card-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-nav);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+}
+
+.flavor-card.active.blackTea .flavor-card-pill {
+  color: var(--flavor-bt-soft);
+}
+
+.flavor-card.active.exoticLychee .flavor-card-pill {
+  color: var(--flavor-el-soft);
+}
+
+.flavor-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.flavor-card.blackTea .flavor-pill-dot {
+  background: var(--flavor-bt-accent);
+  box-shadow: 0 0 6px var(--flavor-bt-accent);
+}
+
+.flavor-card.exoticLychee .flavor-pill-dot {
+  background: var(--flavor-el-accent);
+  box-shadow: 0 0 6px var(--flavor-el-accent);
+}
+
+.flavor-card-active-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+  font-family: var(--font-nav);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+.flavor-card-thumb-wrap {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 70px;
+  height: 100px;
+  pointer-events: none;
+}
+
+.flavor-card-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+  transition: transform 0.4s ease;
+}
+
+.flavor-card:hover .flavor-card-thumb-img {
+  transform: scale(1.08) rotate(3deg);
+}
+
+.flavor-thumb-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  filter: blur(16px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.flavor-card.active .flavor-thumb-glow {
+  opacity: 0.4;
+}
+
+.flavor-card.blackTea .flavor-thumb-glow {
+  background: var(--flavor-bt-accent);
+}
+
+.flavor-card.exoticLychee .flavor-thumb-glow {
+  background: var(--flavor-el-accent);
+}
+
+.flavor-card-body {
+  position: relative;
+  z-index: 2;
+  padding-right: 70px;
+}
+
+.flavor-card-title {
+  font-family: var(--font-editorial);
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.flavor-card-tagline {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.flavor-card-abv {
+  font-family: var(--font-nav);
+  font-size: 10.5px;
+  color: var(--color-text-subtle);
+  letter-spacing: 0.08em;
+}
+
+.flavor-card-accent-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.flavor-card.active.blackTea .flavor-card-accent-bar {
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--flavor-bt-accent), transparent);
+}
+
+.flavor-card.active.exoticLychee .flavor-card-accent-bar {
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--flavor-el-accent), transparent);
+}

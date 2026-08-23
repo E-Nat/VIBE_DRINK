@@ -1,0 +1,257 @@
+.craft-page-root {
+  position: relative;
+  width: 100%;
+  padding-top: var(--header-height);
+}
+
+.craft-hero-section {
+  text-align: center;
+  padding-top: 80px;
+  padding-bottom: 40px;
+}
+
+.craft-hero-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 880px;
+}
+
+.craft-hero-title {
+  font-size: clamp(38px, 6vw, 76px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #FFFFFF;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+.craft-hero-subtitle {
+  font-size: clamp(34px, 5vw, 64px);
+  color: var(--color-accent-soft);
+  margin-bottom: 20px;
+  text-shadow: 0 0 30px var(--color-accent-glow);
+}
+
+.craft-hero-lead {
+  font-size: clamp(15px, 1.2vw, 18px);
+  color: var(--color-text-muted);
+  max-width: 680px;
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+
+/* Stats Pill Bar */
+.craft-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 24px 36px;
+  border-radius: 20px;
+  width: 100%;
+  background: rgba(14, 9, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.craft-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-val {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-accent-soft);
+}
+
+.stat-label {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-text-subtle);
+  text-transform: uppercase;
+}
+
+/* Visual Frame */
+.craft-visual-frame {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  height: 420px;
+}
+
+.craft-visual-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.craft-visual-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, transparent 40%, rgba(5, 3, 6, 0.75) 100%);
+  padding: 30px;
+  text-align: center;
+}
+
+.craft-visual-tagline {
+  font-family: var(--font-editorial);
+  font-size: clamp(22px, 3.2vw, 36px);
+  color: #FFFFFF;
+  font-style: italic;
+  max-width: 720px;
+}
+
+/* Principles Grid */
+.craft-principles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.craft-principle-card {
+  padding: 36px;
+  border-radius: 22px;
+  background: rgba(14, 9, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.principle-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 8px;
+}
+
+.principle-tagline {
+  font-family: var(--font-nav);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent-soft);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.principle-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 14px;
+}
+
+.principle-desc {
+  font-size: 14.5px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* Vessel Section */
+.craft-vessel-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: 60px;
+}
+
+.vessel-title {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 18px 0 20px;
+}
+
+.vessel-desc {
+  font-size: 15.5px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.vessel-specs-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+.vessel-specs-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.vessel-icon {
+  color: var(--color-accent);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.vessel-specs-list strong {
+  color: #FFFFFF;
+  font-size: 15px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.vessel-specs-list p {
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+}
+
+.vessel-card {
+  position: relative;
+  padding: 40px;
+  border-radius: 28px;
+  background: rgba(14, 9, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 480px;
+}
+
+.vessel-bottle-img {
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+  z-index: 2;
+}
+
+.vessel-glow {
+  position: absolute;
+  width: 200px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 70%);
+  filter: blur(50px);
+}
+
+@media (max-width: 1024px) {
+  .craft-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .craft-principles-grid {
+    grid-template-columns: 1fr;
+  }
+  .craft-vessel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .craft-visual-frame {
+    height: 280px;
+  }
+  .craft-stats-grid {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+}

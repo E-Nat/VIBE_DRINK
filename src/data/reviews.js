@@ -1,0 +1,50 @@
+export const reviewsData = {
+  header: {
+    badge: 'Impressions & Voices',
+    title: 'THE VIBE',
+    subtitle: 'Sample impressions from tastemakers and evening connoisseurs.',
+    disclaimer: 'Demonstration and concept quotes reflecting the brand experience.',
+  },
+  reviews: [
+    {
+      id: 'rev-1',
+      quote: 'VIBE has a character you remember. The Black Tea expression is deep, complex, and unlike any spirit on my back bar.',
+      author: 'Alex',
+      role: 'Lounge Mixologist',
+      expression: 'Black Tea',
+      rating: 5,
+    },
+    {
+      id: 'rev-2',
+      quote: 'Distinctive, smooth, and made for nights worth remembering. The Exotic Lychee is luminous and effortlessly refined.',
+      author: 'Maya',
+      role: 'Creative Director',
+      expression: 'Exotic Lychee',
+      rating: 5,
+    },
+    {
+      id: 'rev-3',
+      quote: 'The bottle design is pure sculpture, and the liquid inside lives up to every promise. An extraordinary presence at intimate gatherings.',
+      author: 'Julian',
+      role: 'Architect & Collector',
+      expression: 'Black Tea',
+      rating: 5,
+    },
+    {
+      id: 'rev-4',
+      quote: 'A rare balance between bold botanical depth and silky approachability. It instantly shifts the mood of the room.',
+      author: 'Elena',
+      role: 'Hospitality Tastemaker',
+      expression: 'Exotic Lychee',
+      rating: 5,
+    },
+    {
+      id: 'rev-5',
+      quote: 'From the first aromatic note to the weighted glass finish, everything about VIBE feels deliberate and luxurious.',
+      author: 'David',
+      role: 'Evening Enthusiast',
+      expression: 'Black Tea',
+      rating: 5,
+    },
+  ],
+};

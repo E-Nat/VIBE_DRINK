@@ -1,0 +1,211 @@
+.agegate-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: rgba(5, 3, 6, 0.94);
+  transition: opacity 0.5s ease;
+}
+
+.agegate-backdrop-blur {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
+
+.agegate-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 480px;
+  padding: 44px 36px;
+  text-align: center;
+  background: rgba(18, 12, 19, 0.85);
+  border: 1px solid rgba(215, 164, 91, 0.2);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(215, 164, 91, 0.12);
+  border-radius: 24px;
+}
+
+.agegate-brand-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.agegate-monogram {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-editorial);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 8px;
+  box-shadow: 0 0 16px var(--color-accent-glow);
+}
+
+.agegate-brand-title {
+  font-family: var(--font-editorial);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: #FFFFFF;
+}
+
+.agegate-brand-tagline {
+  font-family: var(--font-nav);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--color-accent-soft);
+  text-transform: uppercase;
+}
+
+.agegate-divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  margin: 24px auto;
+}
+
+.agegate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-nav);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-soft);
+  margin-bottom: 16px;
+}
+
+.agegate-badge-icon {
+  color: var(--color-accent);
+}
+
+.agegate-heading {
+  font-family: var(--font-display);
+  font-size: 38px;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.agegate-description {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.agegate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.agegate-btn {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-family: var(--font-nav);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agegate-btn-primary {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+  color: #050306;
+  box-shadow: 0 4px 20px var(--color-accent-glow-strong);
+}
+
+.agegate-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--color-accent-glow-strong);
+  filter: brightness(1.08);
+}
+
+.agegate-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.agegate-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.agegate-disclaimer {
+  font-size: 11px;
+  color: var(--color-text-subtle);
+  line-height: 1.4;
+}
+
+/* Declined State */
+.agegate-declined-content {
+  padding: 16px 0;
+}
+
+.agegate-declined-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: rgba(232, 154, 170, 0.1);
+  border: 1px solid rgba(232, 154, 170, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #E89AAA;
+}
+
+.agegate-declined-heading {
+  font-family: var(--font-editorial);
+  font-size: 24px;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+}
+
+.agegate-declined-text {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.agegate-declined-subtext {
+  font-size: 13px;
+  color: var(--color-text-subtle);
+  margin-bottom: 24px;
+}
+
+.agegate-btn-retry {
+  width: auto;
+  margin: 0 auto;
+  padding: 10px 20px;
+  font-size: 11px;
+}
